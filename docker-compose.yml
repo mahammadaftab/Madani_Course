@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  # MongoDB
+  mongodb:
+    image: mongo:latest
+    container_name: madani_mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+
+  # Backend
+  backend:
+    build: ./backend
+    container_name: madani_backend
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=development
+      - MONGO_URI=mongodb://admin:password@mongodb:27017/madani_course?authSource=admin
+      - JWT_SECRET=madani_course_secret_key
+      - JWT_EXPIRE=7d
+      - ADMIN_USERNAME=admin@example.com
+      - ADMIN_PASSWORD=password123
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    depends_on:
+      - mongodb
+    restart: unless-stopped
+
+  # Frontend
+  frontend:
+    build: ./frontend
+    container_name: madani_frontend
+    ports:
+      - "3000:80"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  mongodb_data:

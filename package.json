@@ -1,0 +1,25 @@
+{
+  "name": "madani-course",
+  "version": "1.0.0",
+  "description": "A professional MERN application for Student Management with Courses and Exam pages",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "test": "concurrently \"npm run test:backend\" \"npm run test:frontend\"",
+    "test:backend": "cd backend && npm test",
+    "test:frontend": "cd frontend && npm test"
+  },
+  "keywords": [
+    "mern",
+    "student-management",
+    "course-management",
+    "exam-management"
+  ],
+  "author": "Madani Course Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

@@ -1,0 +1,33 @@
+services:
+  - type: web
+    name: madani-backend
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node src/server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRE
+        value: 7d
+      - key: ADMIN_USERNAME
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+
+  - type: web
+    name: madani-frontend
+    env: static
+    buildCommand: npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://your-backend-url.onrender.com/api
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

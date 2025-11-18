@@ -1,0 +1,363 @@
+{
+	"info": {
+		"_postman_id": "8d4a8b55-07d9-4c4a-91d4-0140750127d7",
+		"name": "Madani Course Management System",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37415058"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"{{admin_email}}\",\n  \"password\": \"{{admin_password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Students",
+			"item": [
+				{
+					"name": "Get All Students",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/students?page=1&limit=10&district=Belgaum&q=Ahmed",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"students"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "district",
+									"value": "Belgaum"
+								},
+								{
+									"key": "q",
+									"value": "Ahmed"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Student",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Ahmed Khan\",\n  \"phone\": \"+92 300 1234567\",\n  \"email\": \"ahmed@example.com\",\n  \"district\": \"Belgaum\",\n  \"address\": \"123 Main Street, Karachi\",\n  \"coursePlace\": \"Main Campus\",\n  \"questions\": [\n    {\n      \"qNo\": \"Q1\",\n      \"text\": \"Mathematics\",\n      \"mark\": 85\n    },\n    {\n      \"qNo\": \"Q2\",\n      \"text\": \"Physics\",\n      \"mark\": 78\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/students",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"students"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Student",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Ahmed Khan Updated\",\n  \"phone\": \"+92 300 1234567\",\n  \"email\": \"ahmed@example.com\",\n  \"district\": \"Belgaum\",\n  \"address\": \"123 Main Street, Karachi\",\n  \"coursePlace\": \"Main Campus\",\n  \"questions\": [\n    {\n      \"qNo\": \"Q1\",\n      \"text\": \"Mathematics\",\n      \"mark\": 90\n    },\n    {\n      \"qNo\": \"Q2\",\n      \"text\": \"Physics\",\n      \"mark\": 85\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/students/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"students",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "student_id_here"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Student",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/students/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"students",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "student_id_here"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Courses",
+			"item": [
+				{
+					"name": "Get All Courses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/courses",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"courses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Course",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Advanced Mathematics\",\n  \"description\": \"Comprehensive course covering calculus, algebra, and statistics\",\n  \"duration\": \"12 weeks\",\n  \"fees\": 1200\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/courses",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"courses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Course",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Advanced Mathematics Updated\",\n  \"description\": \"Comprehensive course covering calculus, algebra, statistics, and more\",\n  \"duration\": \"16 weeks\",\n  \"fees\": 1500\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/courses/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"courses",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "course_id_here"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Course",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/courses/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"courses",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "course_id_here"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:5000",
+			"type": "string"
+		},
+		{
+			"key": "admin_email",
+			"value": "admin123@gmail.com",
+			"type": "string"
+		},
+		{
+			"key": "admin_password",
+			"value": "admin123",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
