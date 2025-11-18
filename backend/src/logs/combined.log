@@ -303,3 +303,5 @@
 {"level":"info","message":"Server running on port 5000","service":"madani-course-api","timestamp":"2025-11-18T15:26:11.503Z"}
 {"level":"info","message":"User admin123@gmail.com logged in successfully","service":"madani-course-api","timestamp":"2025-11-18T15:26:27.569Z"}
 {"level":"info","message":"Retrieved 0 courses","service":"madani-course-api","timestamp":"2025-11-18T15:26:30.985Z"}
+{"level":"error","message":"Failed to start server: Database connection failed","service":"madani-course-api","stack":"Error: Database connection failed\n    at connectDB (C:\\Users\\mdaft\\OneDrive\\Desktop\\GitHub Projects\\Madani_Course\\backend\\src\\config\\db.js:24:13)","timestamp":"2025-11-18T16:55:47.046Z"}
+{"level":"info","message":"Server running on port 5000","service":"madani-course-api","timestamp":"2025-11-18T16:57:40.900Z"}
