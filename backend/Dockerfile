@@ -22,6 +22,9 @@ COPY --from=build /app/package*.json ./
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/src ./src
 
+# Copy package.json to ensure correct entry point
+COPY --from=build /app/package.json ./package.json
+
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nextjs -u 1001
