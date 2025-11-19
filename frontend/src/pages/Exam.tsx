@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Plus, RotateCcw, Printer, Award, BookOpen, FileText, Edit, Trash2 } from 'lucide-react';
 import type { ExamEntry, ExamQuestion } from '../types';
+import { examQuestionService, examEntryService } from '../services/examQuestionService';
 
 const Exam = () => {
   const [activeTab, setActiveTab] = useState<'questions' | 'exam'>('questions');
@@ -26,11 +27,6 @@ const Exam = () => {
   const [loading, setLoading] = useState(false);
   const [notification, setNotification] = useState<{message: string, type: 'success' | 'error' | 'info'} | null>(null);
 
-  // Get token from localStorage
-  const getToken = () => {
-    return localStorage.getItem('token');
-  };
-
   // Show notification
   const showNotification = (message: string, type: 'success' | 'error' | 'info' = 'info') => {
     setNotification({message, type});
@@ -47,35 +43,15 @@ const Exam = () => {
       
       try {
         // Load questions
-        const questionsResponse = await fetch('/api/exam/questions', {
-          headers: {
-            'Authorization': `Bearer ${getToken()}`
-          }
-        });
-        
-        if (questionsResponse.ok) {
-          const questionsData = await questionsResponse.json();
-          setQuestions(questionsData);
-          setMarks(Array(questionsData.length).fill(0));
-        } else {
-          console.error('Failed to load questions');
-        }
+        const questionsData = await examQuestionService.getQuestions();
+        setQuestions(questionsData);
+        setMarks(Array(questionsData.length).fill(0));
         
         // Load entries
-        const entriesResponse = await fetch('/api/exam/entries', {
-          headers: {
-            'Authorization': `Bearer ${getToken()}`
-          }
-        });
-        
-        if (entriesResponse.ok) {
-          const entriesData = await entriesResponse.json();
-          setEntries(entriesData);
-        } else {
-          console.error('Failed to load entries');
-        }
+        const entriesData = await examEntryService.getEntries();
+        setEntries(entriesData);
       } catch (error) {
-        console.error('Error loading data:', error);
+        console.error('[Exam] Error loading data:', error);
         showNotification('Failed to load data. Please try again.', "error");
       } finally {
         setLoading(false);
@@ -97,52 +73,36 @@ const Exam = () => {
     setLoading(true);
     
     try {
-      const token = getToken();
-      const headers = {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      };
-      
       if (editingQuestionId) {
         // Update existing question
-        const response = await fetch(`/api/exam/questions/${editingQuestionId}`, {
-          method: 'PUT',
-          headers,
-          body: JSON.stringify({ topic, question: questionText, marks: questionMarks })
+        const updatedQuestion = await examQuestionService.updateQuestion(editingQuestionId, { 
+          topic, 
+          question: questionText, 
+          marks: questionMarks 
         });
         
-        if (response.ok) {
-          const updatedQuestion = await response.json();
-          setQuestions(questions.map(q => 
-            q._id === editingQuestionId ? updatedQuestion : q
-          ));
-          setEditingQuestionId(null);
-          showNotification("Question updated successfully!", "success");
-        } else {
-          throw new Error('Failed to update question');
-        }
+        setQuestions(questions.map(q => 
+          q._id === editingQuestionId ? updatedQuestion : q
+        ));
+        setEditingQuestionId(null);
+        showNotification("Question updated successfully!", "success");
       } else {
         // Add new question
-        const response = await fetch('/api/exam/questions', {
-          method: 'POST',
-          headers,
-          body: JSON.stringify({ topic, question: questionText, marks: questionMarks })
+        const newQuestion = await examQuestionService.createQuestion({ 
+          topic, 
+          question: questionText, 
+          marks: questionMarks 
         });
         
-        if (response.ok) {
-          const newQuestion = await response.json();
-          setQuestions([...questions, newQuestion]);
-          showNotification("Question added successfully!", "success");
-        } else {
-          throw new Error('Failed to add question');
-        }
+        setQuestions([...questions, newQuestion]);
+        showNotification("Question added successfully!", "success");
       }
       
       // Reset form (keep topic for continuity)
       setQuestionText('');
       setQuestionMarks(10);
     } catch (error) {
-      console.error('Error saving question:', error);
+      console.error('[Exam] Error saving question:', error);
       showNotification("Failed to save question. Please try again.", "error");
     } finally {
       setLoading(false);
@@ -163,22 +123,11 @@ const Exam = () => {
       setLoading(true);
       
       try {
-        const token = getToken();
-        const response = await fetch(`/api/exam/questions/${id}`, {
-          method: 'DELETE',
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        
-        if (response.ok) {
-          setQuestions(questions.filter(q => q._id !== id));
-          showNotification("Question deleted successfully!", "success");
-        } else {
-          throw new Error('Failed to delete question');
-        }
+        await examQuestionService.deleteQuestion(id);
+        setQuestions(questions.filter(q => q._id !== id));
+        showNotification("Question deleted successfully!", "success");
       } catch (error) {
-        console.error('Error deleting question:', error);
+        console.error('[Exam] Error deleting question:', error);
         showNotification("Failed to delete question. Please try again.", "error");
       } finally {
         setLoading(false);
@@ -207,40 +156,27 @@ const Exam = () => {
       const maxPossibleMarks = questions.reduce((sum, q) => sum + q.marks, 0);
       const percentage = maxPossibleMarks > 0 ? (totalMarks / maxPossibleMarks) * 100 : 0;
 
-      const token = getToken();
-      const response = await fetch('/api/exam/entries', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ 
-          name, 
-          phone, 
-          address, 
-          coursePlace, 
-          marks, 
-          percentage 
-        })
+      const newEntry = await examEntryService.createEntry({ 
+        name, 
+        phone, 
+        address, 
+        coursePlace, 
+        marks, 
+        percentage 
       });
       
-      if (response.ok) {
-        const newEntry = await response.json();
-        setEntries([newEntry, ...entries]); // Add to the beginning
-        
-        // Clear all input fields after adding the entry
-        setName('');
-        setPhone('');
-        setAddress('');
-        setCoursePlace('');
-        setMarks(Array(questions.length).fill(0));
-        
-        showNotification("Entry added successfully!", "success");
-      } else {
-        throw new Error('Failed to add entry');
-      }
+      setEntries([newEntry, ...entries]); // Add to the beginning
+      
+      // Clear all input fields after adding the entry
+      setName('');
+      setPhone('');
+      setAddress('');
+      setCoursePlace('');
+      setMarks(Array(questions.length).fill(0));
+      
+      showNotification("Entry added successfully!", "success");
     } catch (error) {
-      console.error('Error adding entry:', error);
+      console.error('[Exam] Error adding entry:', error);
       showNotification("Failed to add entry. Please try again.", "error");
     } finally {
       setLoading(false);
@@ -254,22 +190,11 @@ const Exam = () => {
       
       try {
         // Delete all entries (keep questions)
-        const token = getToken();
-        const response = await fetch('/api/exam/entries', {
-          method: 'DELETE',
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        
-        if (response.ok) {
-          setEntries([]);
-          showNotification("New project started! Previous entries cleared.", "success");
-        } else {
-          throw new Error('Failed to clear entries');
-        }
+        await examEntryService.deleteAllEntries();
+        setEntries([]);
+        showNotification("New project started! Previous entries cleared.", "success");
       } catch (error) {
-        console.error('Error clearing entries:', error);
+        console.error('[Exam] Error clearing entries:', error);
         showNotification("Failed to clear entries. Please try again.", "error");
       } finally {
         setLoading(false);
@@ -282,21 +207,10 @@ const Exam = () => {
     setLoading(true);
     
     try {
-      const token = getToken();
-      const response = await fetch('/api/exam/entries/top', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      
-      if (response.ok) {
-        const topEntries = await response.json();
-        setTopThree(topEntries);
-      } else {
-        throw new Error('Failed to load top entries');
-      }
+      const topEntries = await examEntryService.getTopEntries();
+      setTopThree(topEntries);
     } catch (error) {
-      console.error('Error loading top entries:', error);
+      console.error('[Exam] Error loading top entries:', error);
       showNotification("Failed to load top entries. Please try again.", "error");
     } finally {
       setLoading(false);
