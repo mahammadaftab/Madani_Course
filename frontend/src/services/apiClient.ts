@@ -5,7 +5,8 @@ class ApiClient {
   private token: string | null;
 
   constructor(baseUrl: string) {
-    this.baseUrl = baseUrl;
+    // Ensure baseUrl ends with a trailing slash
+    this.baseUrl = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
     this.token = localStorage.getItem('token');
   }
 
@@ -20,7 +21,9 @@ class ApiClient {
   }
 
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-    const url = `${this.baseUrl}${endpoint}`;
+    // Ensure endpoint starts with a slash
+    const normalizedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+    const url = `${this.baseUrl}${normalizedEndpoint}`.replace(/\/+/g, '/');
     
     const config: RequestInit = {
       ...options,
