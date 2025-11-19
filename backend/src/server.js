@@ -4,6 +4,11 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
+// Add startup logging
+console.log('Starting server...');
+console.log('Environment:', process.env.NODE_ENV);
+console.log('Port:', process.env.PORT || 5000);
+
 const authRoutes = require('./routes/auth.routes');
 const studentRoutes = require('./routes/student.routes');
 const courseRoutes = require('./routes/course.routes');
@@ -17,6 +22,16 @@ const connectDB = require('./config/db');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+// Add a root route for testing
+app.get('/', (req, res) => {
+  res.json({ message: 'Madani Course Backend is running', timestamp: new Date().toISOString() });
+});
+
+// Add a health check route
+app.get('/health', (req, res) => {
+  res.json({ status: 'OK', timestamp: new Date().toISOString() });
+});
 
 // Security middleware
 app.use(helmet());
@@ -42,11 +57,14 @@ app.use('/api/exam', examRoutes);
 app.use(errorHandler);
 
 // Connect to MongoDB and start server
+console.log('Attempting to connect to database...');
 connectDB().then(() => {
   app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
     logger.info(`Server running on port ${PORT}`);
   });
 }).catch((error) => {
+  console.error('Failed to start server:', error);
   logger.error('Failed to start server:', error);
   process.exit(1);
 });

@@ -315,3 +315,5 @@
 {"level":"info","message":"User mohommedyaseers@gmail.com logged in successfully","service":"madani-course-api","timestamp":"2025-11-18T17:39:24.933Z"}
 {"level":"info","message":"User admin123@gmail.com logged in successfully","service":"madani-course-api","timestamp":"2025-11-18T17:40:35.041Z"}
 {"level":"info","message":"Server running on port 5000","service":"madani-course-api","timestamp":"2025-11-19T05:33:29.822Z"}
+{"level":"info","message":"Server running on port 5000","service":"madani-course-api","timestamp":"2025-11-19T06:35:19.500Z"}
+{"level":"info","message":"Server running on port 5000","service":"madani-course-api","timestamp":"2025-11-19T06:35:33.539Z"}

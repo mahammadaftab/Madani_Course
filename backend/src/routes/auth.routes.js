@@ -4,6 +4,11 @@ const { protect } = require('../middleware/auth.middleware');
 
 const router = express.Router();
 
+// Add a test route
+router.get('/test', (req, res) => {
+  res.json({ message: 'Auth routes are working' });
+});
+
 router.post('/login', login);
 router.post('/register', register);
 router.get('/me', protect, getMe);
