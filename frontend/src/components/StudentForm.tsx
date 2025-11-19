@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useStudentForm } from '../hooks/useStudentForm';
 import type { Student } from '../types';
-import { User, Phone, Calendar, MapPin, Home, Briefcase } from 'lucide-react';
+import { User, Phone, Calendar, MapPin, Briefcase } from 'lucide-react';
 
 interface StudentFormProps {
   student?: Student;
@@ -16,7 +16,6 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onClose, onSuccess }
     handleSubmit,
     errors,
     isSubmitting,
-    reset,
   } = useStudentForm({
     student,
     onSuccess: () => {
@@ -45,7 +44,7 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onClose, onSuccess }
   );
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4 z-50 overflow-y-auto">
       {/* Background pattern overlay */}
       <div className="absolute inset-0 overflow-hidden opacity-20">
         {backgroundPattern}
@@ -55,21 +54,21 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onClose, onSuccess }
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-gray-200"
+        className="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-gray-200 my-8"
       >
         {/* Header with gradient */}
-        <div className="bg-gradient-to-r from-indigo-500 to-purple-600 p-6 rounded-t-2xl">
-          <h2 className="text-3xl font-bold text-white">
+        <div className="bg-gradient-to-r from-indigo-500 to-purple-600 p-4 sm:p-6 rounded-t-2xl">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white">
             {student ? 'Edit Student' : 'Add New Student'}
           </h2>
-          <p className="text-indigo-100 mt-2">
+          <p className="text-indigo-100 mt-1 text-sm sm:text-base">
             {student ? 'Update student information' : 'Register a new student in the system'}
           </p>
         </div>
         
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           <form onSubmit={handleSubmit}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6">
               {/* Name */}
               <div className="relative">
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1 flex items-center">
@@ -80,12 +79,12 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onClose, onSuccess }
                   <input
                     id="name"
                     {...register('name')}
-                    className={`pl-10 w-full rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none shadow-sm py-3 px-4 transition-all duration-300 ${
+                    className={`pl-10 w-full rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none shadow-sm py-2 sm:py-3 px-3 sm:px-4 transition-all duration-300 ${
                       errors.name ? 'border-red-500 ring-red-500' : ''
-                    }`}
+                    } text-sm sm:text-base`}
                     placeholder="Enter full name"
                   />
-                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
                 </div>
                 {errors.name && (
                   <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
@@ -103,9 +102,9 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onClose, onSuccess }
                     id="phone"
                     type="tel"
                     {...register('phone')}
-                    className={`pl-10 w-full rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none shadow-sm py-3 px-4 transition-all duration-300 ${
+                    className={`pl-10 w-full rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none shadow-sm py-2 sm:py-3 px-3 sm:px-4 transition-all duration-300 ${
                       errors.phone ? 'border-red-500 ring-red-500' : ''
-                    }`}
+                    } text-sm sm:text-base`}
                     placeholder="Enter phone number"
                     maxLength={10}
                     onInput={(e) => {
@@ -117,7 +116,7 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onClose, onSuccess }
                       }
                     }}
                   />
-                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
                 </div>
                 {errors.phone && (
                   <p className="mt-1 text-sm text-red-600">{errors.phone.message}</p>
@@ -135,14 +134,14 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onClose, onSuccess }
                     id="age"
                     type="number"
                     {...register('age', { valueAsNumber: true })}
-                    className={`pl-10 w-full rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none shadow-sm py-3 px-4 transition-all duration-300 ${
+                    className={`pl-10 w-full rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none shadow-sm py-2 sm:py-3 px-3 sm:px-4 transition-all duration-300 ${
                       errors.age ? 'border-red-500 ring-red-500' : ''
-                    }`}
+                    } text-sm sm:text-base`}
                     placeholder="Enter age"
                     min="1"
                     max="120"
                   />
-                  <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
                 </div>
                 {errors.age && (
                   <p className="mt-1 text-sm text-red-600">{errors.age.message}</p>
@@ -159,9 +158,9 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onClose, onSuccess }
                   <select
                     id="district"
                     {...register('district')}
-                    className={`pl-10 w-full rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none shadow-sm py-3 px-4 transition-all duration-300 appearance-none ${
+                    className={`pl-10 w-full rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none shadow-sm py-2 sm:py-3 px-3 sm:px-4 transition-all duration-300 appearance-none ${
                       errors.district ? 'border-red-500 ring-red-500' : ''
-                    }`}
+                    } text-sm sm:text-base`}
                   >
                     <option value="">Select district</option>
                     <option value="Belgaum">Belgaum</option>
@@ -171,9 +170,9 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onClose, onSuccess }
                     <option value="Gadag">Gadag</option>
                     <option value="Haveri">Haveri</option>
                   </select>
-                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400 pointer-events-none" />
                   <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
                   </div>
@@ -186,7 +185,7 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onClose, onSuccess }
               {/* Address */}
               <div className="md:col-span-2 relative">
                 <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1 flex items-center">
-                  <Home className="w-4 h-4 mr-2 text-indigo-500" />
+                  <MapPin className="w-4 h-4 mr-2 text-indigo-500" />
                   Address
                 </label>
                 <div className="relative">
@@ -194,12 +193,12 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onClose, onSuccess }
                     id="address"
                     {...register('address')}
                     rows={3}
-                    className={`pl-10 w-full rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none shadow-sm py-3 px-4 transition-all duration-300 ${
+                    className={`pl-10 w-full rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none shadow-sm py-2 sm:py-3 px-3 sm:px-4 transition-all duration-300 ${
                       errors.address ? 'border-red-500 ring-red-500' : ''
-                    }`}
+                    } text-sm sm:text-base`}
                     placeholder="Enter full address"
                   />
-                  <Home className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                  <MapPin className="absolute left-3 top-3 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
                 </div>
                 {errors.address && (
                   <p className="mt-1 text-sm text-red-600">{errors.address.message}</p>
@@ -216,12 +215,12 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onClose, onSuccess }
                   <input
                     id="coursePlace"
                     {...register('coursePlace')}
-                    className={`pl-10 w-full rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none shadow-sm py-3 px-4 transition-all duration-300 ${
+                    className={`pl-10 w-full rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none shadow-sm py-2 sm:py-3 px-3 sm:px-4 transition-all duration-300 ${
                       errors.coursePlace ? 'border-red-500 ring-red-500' : ''
-                    }`}
+                    } text-sm sm:text-base`}
                     placeholder="Enter Work"
                   />
-                  <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
                 </div>
                 {errors.coursePlace && (
                   <p className="mt-1 text-sm text-red-600">{errors.coursePlace.message}</p>
@@ -231,13 +230,13 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onClose, onSuccess }
             </div>
             
             {/* Form Actions */}
-            <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
+            <div className="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-3 pt-4 sm:pt-6 border-t border-gray-200">
               <motion.button
                 type="button"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={onClose}
-                className="px-6 py-3 bg-gray-100 text-gray-800 rounded-xl font-medium hover:bg-gray-200 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 shadow-sm hover:shadow-md"
+                className="px-4 py-2 sm:px-6 sm:py-3 bg-gray-100 text-gray-800 rounded-xl font-medium hover:bg-gray-200 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 shadow-sm hover:shadow-md text-sm sm:text-base"
               >
                 Close
               </motion.button>
@@ -246,7 +245,7 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onClose, onSuccess }
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 disabled={isSubmitting}
-                className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-medium hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-70 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+                className="px-4 py-2 sm:px-6 sm:py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-medium hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-70 disabled:cursor-not-allowed shadow-lg hover:shadow-xl text-sm sm:text-base"
               >
                 {isSubmitting ? (
                   <span className="flex items-center">
