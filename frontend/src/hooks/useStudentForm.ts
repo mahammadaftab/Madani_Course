@@ -30,7 +30,7 @@ export const useStudentForm = ({ student, onSuccess }: UseStudentFormProps = {})
           name: '',
           phone: '',
           age: undefined, // No default age
-          district: 'Belgaum' as any, // Type assertion to fix the issue
+          district: undefined, // No default district
           address: '',
           coursePlace: ''
         }
@@ -48,7 +48,12 @@ export const useStudentForm = ({ student, onSuccess }: UseStudentFormProps = {})
         console.log('Student created:', response.data);
       }
       
-      reset();
+      // Only reset the form when editing, not when adding
+      if (student) {
+        reset();
+      }
+      
+      // Always call onSuccess
       onSuccess?.();
     } catch (error) {
       console.error('Error saving student:', error);

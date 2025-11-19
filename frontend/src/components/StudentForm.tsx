@@ -16,11 +16,19 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onClose, onSuccess }
     handleSubmit,
     errors,
     isSubmitting,
+    reset,
   } = useStudentForm({
     student,
     onSuccess: () => {
-      onSuccess?.();
-      onClose();
+      // Only close the form for edit mode, not for add mode
+      if (student) {
+        // Editing existing student - close form
+        onSuccess?.();
+        onClose();
+      } else {
+        // Adding new student - don't close form automatically
+        onSuccess?.();
+      }
     }
   });
 
@@ -72,8 +80,10 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onClose, onSuccess }
                   <input
                     id="name"
                     {...register('name')}
-                    className={`input-field pl-10 ${errors.name ? 'border-red-500 ring-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'}`}
-                    placeholder="Full name"
+                    className={`pl-10 w-full rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none shadow-sm py-3 px-4 transition-all duration-300 ${
+                      errors.name ? 'border-red-500 ring-red-500' : ''
+                    }`}
+                    placeholder="Enter full name"
                   />
                   <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                 </div>
@@ -91,9 +101,21 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onClose, onSuccess }
                 <div className="relative">
                   <input
                     id="phone"
+                    type="tel"
                     {...register('phone')}
-                    className={`input-field pl-10 ${errors.phone ? 'border-red-500 ring-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'}`}
-                    placeholder="Phone number"
+                    className={`pl-10 w-full rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none shadow-sm py-3 px-4 transition-all duration-300 ${
+                      errors.phone ? 'border-red-500 ring-red-500' : ''
+                    }`}
+                    placeholder="Enter phone number"
+                    maxLength={10}
+                    onInput={(e) => {
+                      // Remove any non-digit characters
+                      e.currentTarget.value = e.currentTarget.value.replace(/\D/g, '');
+                      // Limit to 10 characters
+                      if (e.currentTarget.value.length > 10) {
+                        e.currentTarget.value = e.currentTarget.value.slice(0, 10);
+                      }
+                    }}
                   />
                   <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                 </div>
@@ -113,8 +135,12 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onClose, onSuccess }
                     id="age"
                     type="number"
                     {...register('age', { valueAsNumber: true })}
-                    className={`input-field pl-10 ${errors.age ? 'border-red-500 ring-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'}`}
-                    placeholder="Age"
+                    className={`pl-10 w-full rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none shadow-sm py-3 px-4 transition-all duration-300 ${
+                      errors.age ? 'border-red-500 ring-red-500' : ''
+                    }`}
+                    placeholder="Enter age"
+                    min="1"
+                    max="120"
                   />
                   <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                 </div>
@@ -133,7 +159,9 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onClose, onSuccess }
                   <select
                     id="district"
                     {...register('district')}
-                    className={`input-field pl-10 ${errors.district ? 'border-red-500 ring-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'}`}
+                    className={`pl-10 w-full rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none shadow-sm py-3 px-4 transition-all duration-300 appearance-none ${
+                      errors.district ? 'border-red-500 ring-red-500' : ''
+                    }`}
                   >
                     <option value="">Select district</option>
                     <option value="Belgaum">Belgaum</option>
@@ -144,6 +172,11 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onClose, onSuccess }
                     <option value="Haveri">Haveri</option>
                   </select>
                   <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                  </div>
                 </div>
                 {errors.district && (
                   <p className="mt-1 text-sm text-red-600">{errors.district.message}</p>
@@ -161,8 +194,10 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onClose, onSuccess }
                     id="address"
                     {...register('address')}
                     rows={3}
-                    className={`input-field pl-10 ${errors.address ? 'border-red-500 ring-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'}`}
-                    placeholder="Address"
+                    className={`pl-10 w-full rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none shadow-sm py-3 px-4 transition-all duration-300 ${
+                      errors.address ? 'border-red-500 ring-red-500' : ''
+                    }`}
+                    placeholder="Enter full address"
                   />
                   <Home className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
                 </div>
@@ -175,14 +210,16 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onClose, onSuccess }
               <div className="md:col-span-2 relative">
                 <label htmlFor="coursePlace" className="block text-sm font-medium text-gray-700 mb-1 flex items-center">
                   <Briefcase className="w-4 h-4 mr-2 text-indigo-500" />
-                  Kaam *
+                  Work *
                 </label>
                 <div className="relative">
                   <input
                     id="coursePlace"
                     {...register('coursePlace')}
-                    className={`input-field pl-10 ${errors.coursePlace ? 'border-red-500 ring-red-500' : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'}`}
-                    placeholder="Kaam"
+                    className={`pl-10 w-full rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none shadow-sm py-3 px-4 transition-all duration-300 ${
+                      errors.coursePlace ? 'border-red-500 ring-red-500' : ''
+                    }`}
+                    placeholder="Enter Work"
                   />
                   <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                 </div>
@@ -194,22 +231,22 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onClose, onSuccess }
             </div>
             
             {/* Form Actions */}
-            <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+            <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
               <motion.button
                 type="button"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={onClose}
-                className="px-6 py-3 bg-gray-200 text-gray-800 rounded-lg font-medium hover:bg-gray-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                className="px-6 py-3 bg-gray-100 text-gray-800 rounded-xl font-medium hover:bg-gray-200 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 shadow-sm hover:shadow-md"
               >
-                Cancel
+                Close
               </motion.button>
               <motion.button
                 type="submit"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 disabled={isSubmitting}
-                className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-medium hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-70 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+                className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-medium hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-70 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
               >
                 {isSubmitting ? (
                   <span className="flex items-center">
@@ -219,7 +256,7 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onClose, onSuccess }
                     </svg>
                     Saving...
                   </span>
-                ) : student ? 'Update Student' : 'Add Student'}
+                ) : student ? 'Update Student' : 'Save Student'}
               </motion.button>
             </div>
           </form>

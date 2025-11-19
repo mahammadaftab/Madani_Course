@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
@@ -13,32 +13,52 @@ const Students = () => {
   const [showForm, setShowForm] = useState(false);
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [selectedDistrict, setSelectedDistrict] = useState('All');
+
+  // Debounce search term
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500); // 500ms debounce delay
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [searchTerm]);
 
   // Fetch students with React Query
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['students', searchTerm, selectedDistrict],
+    queryKey: ['students', debouncedSearchTerm, selectedDistrict],
     queryFn: async () => {
       const response = await studentService.getAll({ 
-        q: searchTerm, 
+        q: debouncedSearchTerm, 
         district: selectedDistrict === 'All' ? undefined : selectedDistrict 
       });
       return response;
-    }
+    },
+    // Don't refetch on window focus to reduce API calls
+    refetchOnWindowFocus: false,
+    // Only enable query when debounced term is set or we're fetching all students
+    enabled: debouncedSearchTerm.length > 0 || (debouncedSearchTerm.length === 0 && selectedDistrict === 'All')
   });
 
   const students: Student[] = data?.data || [];
 
   // Filter students based on search term and district
-  const filteredStudents = students.filter((student: Student) => {
-    const matchesSearch = student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      student.phone.includes(searchTerm) ||
-      student.address.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredStudents = useMemo(() => {
+    if (!students) return [];
     
-    const matchesDistrict = selectedDistrict === 'All' || student.district === selectedDistrict;
-    
-    return matchesSearch && matchesDistrict;
-  });
+    return students.filter((student: Student) => {
+      const matchesSearch = student.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+        student.phone.includes(debouncedSearchTerm) ||
+        student.address.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
+      
+      const matchesDistrict = selectedDistrict === 'All' || student.district === selectedDistrict;
+      
+      return matchesSearch && matchesDistrict;
+    });
+  }, [students, debouncedSearchTerm, selectedDistrict]);
 
   const handleAddStudent = () => {
     setEditingStudent(null);
@@ -167,10 +187,174 @@ const Students = () => {
     setShowForm(false);
   };
 
+  // Remove loading indicator completely
   if (isLoading) {
+    // Don't show any loading indicator
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#6366f1]"></div>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zMCAyOGMwLTEuMS45LTIgMi0yaDE2YzEuMSAwIDItLjkgMi0yVjEyYzAtMS4xLS45LTItMi0yaC0xNmMtMS4xIDAtMiAuOS0yIDJ2MTR6IiBzdHJva2U9IiNlNWU1ZTUiIHN0cm9rZS13aWR0aD0iMSIvPjxwYXRoIGQ9Ik0zMCAzMGMwLTEuMS45LTIgMi0yaDE2YzEuMSAwIDItLjkgMi0yVjE0YzAtMS4xLS45LTItMi0yaC0xNmMtMS4xIDAtMiAuOS0yIDJ2MTZ6IiBzdHJva2U9IiNlNWU1ZTUiIHN0cm9rZS13aWR0aD0iMSIvPjxwYXRoIGQ9Ik0zMCAzMmMwLTEuMS45LTIgMi0yaDE2YzEuMSAwIDItLjkgMi0yVjE2YzAtMS4xLS45LTItMi0yaC0xNmMtMS4xIDAtMiAuOS0yIDJ2MTZ6IiBzdHJva2U9IiNlNWU1ZTUiIHN0cm9rZS13aWR0aD0iMSIvPjwvZz48L3N2Zz4=')] opacity-20"></div>
+        
+        {/* Header */}
+        <header className="bg-white/80 backdrop-blur-lg shadow-sm border-b border-gray-200 sticky top-0 z-10">
+          <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex justify-between items-center">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">Students Management</h1>
+              <p className="text-sm text-gray-500 mt-1">Manage and track all student registrations</p>
+            </div>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleAddStudent}
+              className="flex items-center bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 shadow-md hover:shadow-lg"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Add Student
+            </motion.button>
+          </div>
+        </header>
+
+        <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 relative z-0">
+          {/* Stats Cards - Show skeleton or empty state */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 transition-all duration-300 hover:shadow-md">
+              <div className="flex items-center">
+                <div className="p-3 rounded-lg bg-blue-100 text-blue-600">
+                  <Users className="h-6 w-6" />
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm font-medium text-gray-600">Total Students</p>
+                  <p className="text-2xl font-bold text-gray-900">-</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 transition-all duration-300 hover:shadow-md">
+              <div className="flex items-center">
+                <div className="p-3 rounded-lg bg-green-100 text-green-600">
+                  <MapPin className="h-6 w-6" />
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm font-medium text-gray-600">Districts</p>
+                  <p className="text-2xl font-bold text-gray-900">-</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 transition-all duration-300 hover:shadow-md">
+              <div className="flex items-center">
+                <div className="p-3 rounded-lg bg-purple-100 text-purple-600">
+                  <Calendar className="h-6 w-6" />
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm font-medium text-gray-600">This Month</p>
+                  <p className="text-2xl font-bold text-gray-900">-</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Search and Filters */}
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8 transition-all duration-300 hover:shadow-md">
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className="flex-1">
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Search className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <input
+                    type="text"
+                    className="pl-10 w-full rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none shadow-sm py-3 px-4 transition-all duration-300"
+                    placeholder="Search students by name, phone, or address..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div>
+                <select
+                  className="rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none shadow-sm py-3 px-4 transition-all duration-300 bg-white"
+                  value={selectedDistrict}
+                  onChange={(e) => setSelectedDistrict(e.target.value)}
+                >
+                  <option value="All">All Districts</option>
+                  <option value="Belgaum">Belgaum</option>
+                  <option value="Dharward">Dharward</option>
+                  <option value="Bagalkot">Bagalkot</option>
+                  <option value="Bijapur">Bijapur</option>
+                  <option value="Gadag">Gadag</option>
+                  <option value="Haveri">Haveri</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex space-x-3 mb-6">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handlePrint}
+              className="flex items-center bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-all duration-300 shadow-sm hover:shadow-md"
+            >
+              <Printer className="h-4 w-4 mr-2" />
+              Print List
+            </motion.button>
+          </div>
+
+          {/* Students Table */}
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-md">
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th scope="col" className="table-header px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Student
+                    </th>
+                    <th scope="col" className="table-header px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Age
+                    </th>
+                    <th scope="col" className="table-header px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Phone
+                    </th>
+                    <th scope="col" className="table-header px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Address
+                    </th>
+                    <th scope="col" className="table-header px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      District
+                    </th>
+                    <th scope="col" className="table-header px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Kaam
+                    </th>
+                    <th scope="col" className="table-header px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {/* Show empty state while loading */}
+                  <tr>
+                    <td colSpan={7} className="table-cell text-center py-12 text-gray-500">
+                      <div className="flex flex-col items-center justify-center">
+                        <Users className="h-12 w-12 text-gray-300 mb-4" />
+                        <p className="text-lg font-medium text-gray-500">Loading students...</p>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </main>
+
+        {/* Student Form Modal */}
+        {showForm && (
+          <StudentForm
+            student={editingStudent || undefined}
+            onClose={() => setShowForm(false)}
+            onSuccess={handleFormSuccess}
+          />
+        )}
       </div>
     );
   }
@@ -220,7 +404,7 @@ const Students = () => {
 
       <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 relative z-0">
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 transition-all duration-300 hover:shadow-md">
             <div className="flex items-center">
               <div className="p-3 rounded-lg bg-blue-100 text-blue-600">
@@ -258,20 +442,6 @@ const Students = () => {
               </div>
             </div>
           </div>
-          
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 transition-all duration-300 hover:shadow-md">
-            <div className="flex items-center">
-              <div className="p-3 rounded-lg bg-indigo-100 text-indigo-600">
-                <Home className="h-6 w-6" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Avg. Age</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {students.length > 0 ? Math.round(students.reduce((sum, s) => sum + s.age, 0) / students.length) : 0}
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* Search and Filters */}
@@ -284,7 +454,7 @@ const Students = () => {
                 </div>
                 <input
                   type="text"
-                  className="input-field pl-10 w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm"
+                  className="pl-10 w-full rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none shadow-sm py-3 px-4 transition-all duration-300"
                   placeholder="Search students by name, phone, or address..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
@@ -293,7 +463,7 @@ const Students = () => {
             </div>
             <div>
               <select
-                className="input-field rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm"
+                className="rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none shadow-sm py-3 px-4 transition-all duration-300 bg-white"
                 value={selectedDistrict}
                 onChange={(e) => setSelectedDistrict(e.target.value)}
               >
@@ -359,7 +529,7 @@ const Students = () => {
                         <Users className="h-12 w-12 text-gray-300 mb-4" />
                         <p className="text-lg font-medium text-gray-500">No students found</p>
                         <p className="text-sm text-gray-400 mt-1">
-                          {searchTerm ? 'Try adjusting your search criteria' : 'Get started by adding a new student'}
+                          {debouncedSearchTerm ? 'Try adjusting your search criteria' : 'Get started by adding a new student'}
                         </p>
                       </div>
                     </td>
