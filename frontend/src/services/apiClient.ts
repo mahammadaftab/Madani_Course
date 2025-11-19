@@ -5,8 +5,8 @@ class ApiClient {
   private token: string | null;
 
   constructor(baseUrl: string) {
-    // Ensure baseUrl ends with a trailing slash
-    this.baseUrl = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+    // Remove trailing slash if present to avoid double slashes
+    this.baseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
     this.token = localStorage.getItem('token');
   }
 
@@ -23,7 +23,10 @@ class ApiClient {
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     // Ensure endpoint starts with a slash
     const normalizedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
-    const url = `${this.baseUrl}${normalizedEndpoint}`.replace(/\/+/g, '/');
+    // Construct URL without double slashes
+    const url = `${this.baseUrl}${normalizedEndpoint}`;
+    
+    console.log(`[API] Making request to: ${url}`, { method: options.method || 'GET' });
     
     const config: RequestInit = {
       ...options,
@@ -42,6 +45,12 @@ class ApiClient {
 
     try {
       const response = await fetch(url, config);
+      
+      console.log(`[API] Response received from ${url}:`, {
+        status: response.status,
+        statusText: response.statusText,
+        headers: Object.fromEntries(response.headers.entries())
+      });
       
       // Handle empty responses
       const contentType = response.headers.get('content-type');
@@ -67,13 +76,15 @@ class ApiClient {
       
       // Handle empty response body
       const text = await response.text();
+      console.log(`[API] Response body from ${url}:`, text);
+      
       if (!text) {
         return {} as T;
       }
       
       return JSON.parse(text);
     } catch (error) {
-      console.error('API request failed:', error);
+      console.error('[API] Request failed:', error);
       throw error;
     }
   }

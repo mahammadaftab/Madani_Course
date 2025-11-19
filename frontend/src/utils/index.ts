@@ -1,6 +1,11 @@
 // API base URL
 export const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://madani-course-backend.onrender.com/api';
 
+// Debug logging in development
+if (import.meta.env.DEV) {
+  console.log('API_BASE_URL:', API_BASE_URL);
+}
+
 // Auth token management
 export const getToken = () => localStorage.getItem('token');
 

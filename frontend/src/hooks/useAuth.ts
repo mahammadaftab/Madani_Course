@@ -17,6 +17,7 @@ export const useAuth = () => {
 
   useEffect(() => {
     const verifyToken = async () => {
+      console.log('[AUTH HOOK] Verifying token...');
       const token = getToken();
       if (token) {
         try {
@@ -27,14 +28,17 @@ export const useAuth = () => {
           const response = await authService.getCurrentUser();
           
           if (response.success) {
+            console.log('[AUTH HOOK] Token verified, user authenticated');
             setIsAuthenticated(true);
             setUser(response.user);
           } else {
+            console.log('[AUTH HOOK] Token verification failed, removing token');
             // Token is invalid, remove it
             removeToken();
             apiClient.removeToken();
           }
         } catch (error) {
+          console.log('[AUTH HOOK] Error verifying token, removing token', error);
           // Error verifying token, remove it
           removeToken();
           apiClient.removeToken();
@@ -47,24 +51,29 @@ export const useAuth = () => {
   }, []);
 
   const login = async (email: string, password: string) => {
+    console.log('[AUTH HOOK] Attempting login...');
     try {
       const response = await authService.login({ email, password });
 
       if (response.success) {
+        console.log('[AUTH HOOK] Login successful');
         saveToken(response.token);
         apiClient.setToken(response.token);
         setIsAuthenticated(true);
         setUser(response.user);
         return { success: true };
       } else {
+        console.log('[AUTH HOOK] Login failed: Invalid credentials');
         return { success: false, error: 'Invalid credentials' };
       }
     } catch (error) {
+      console.log('[AUTH HOOK] Login error:', error);
       return { success: false, error: 'An error occurred during login' };
     }
   };
 
   const logout = () => {
+    console.log('[AUTH HOOK] Logging out');
     removeToken();
     apiClient.removeToken();
     setIsAuthenticated(false);

@@ -21,27 +21,45 @@ export interface User {
 
 export const authService = {
   // Login
-  login: (credentials: LoginCredentials) => {
-    return apiClient.post<AuthResponse>('/auth/login', credentials);
+  login: async (credentials: LoginCredentials) => {
+    console.log('[AUTH] Attempting login with credentials:', {
+      email: credentials.email,
+      // Don't log password for security
+    });
+    
+    try {
+      const response = await apiClient.post<AuthResponse>('/auth/login', credentials);
+      console.log('[AUTH] Login response:', response);
+      return response;
+    } catch (error) {
+      console.error('[AUTH] Login error:', error);
+      throw error;
+    }
   },
 
   // Logout
   logout: () => {
+    console.log('[AUTH] Logging out');
     apiClient.removeToken();
   },
 
   // Check if user is authenticated
   isAuthenticated: () => {
-    return !!localStorage.getItem('token');
+    const token = localStorage.getItem('token');
+    console.log('[AUTH] Checking authentication status, token exists:', !!token);
+    return !!token;
   },
 
   // Get token
   getToken: () => {
-    return localStorage.getItem('token');
+    const token = localStorage.getItem('token');
+    console.log('[AUTH] Getting token, exists:', !!token);
+    return token;
   },
 
   // Get current user info
   getCurrentUser: () => {
+    console.log('[AUTH] Getting current user info');
     return apiClient.get<{ success: boolean; user: User }>('/auth/me');
   }
 };

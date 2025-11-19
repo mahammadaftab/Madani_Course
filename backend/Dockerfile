@@ -17,13 +17,16 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy built files from build stage
+# Copy all necessary files from build stage
 COPY --from=build /app/package*.json ./
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/src ./src
 
 # Copy package.json to ensure correct entry point
 COPY --from=build /app/package.json ./package.json
+
+# Copy .env file if it exists (for production it will be overridden by Render env vars)
+# COPY --from=build /app/.env ./.env
 
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs

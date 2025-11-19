@@ -6,6 +6,7 @@ const router = express.Router();
 
 // Add a test route
 router.get('/test', (req, res) => {
+  console.log('[AUTH] Test endpoint hit');
   res.json({ message: 'Auth routes are working' });
 });
 
