@@ -43,12 +43,35 @@ class ApiClient {
     try {
       const response = await fetch(url, config);
       
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      // Handle empty responses
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        if (response.status === 204 || response.status === 200) {
+          // Return empty object for successful responses with no content
+          return {} as T;
+        }
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
       
-      return await response.json();
+      if (!response.ok) {
+        let errorMessage = `HTTP error! status: ${response.status}`;
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorMessage;
+        } catch (e) {
+          // If we can't parse the error response, use the status text
+          errorMessage = response.statusText || errorMessage;
+        }
+        throw new Error(errorMessage);
+      }
+      
+      // Handle empty response body
+      const text = await response.text();
+      if (!text) {
+        return {} as T;
+      }
+      
+      return JSON.parse(text);
     } catch (error) {
       console.error('API request failed:', error);
       throw error;
