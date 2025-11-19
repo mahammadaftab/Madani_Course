@@ -197,74 +197,74 @@ const Students = () => {
         
         {/* Header */}
         <header className="bg-white/80 backdrop-blur-lg shadow-sm border-b border-gray-200 sticky top-0 z-10">
-          <div className="max-w-7xl mx-auto px-4 py-4 sm:py-6 sm:px-6 lg:px-8 flex justify-between items-center">
+          <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex justify-between items-center">
             <div>
-              <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Students Management</h1>
-              <p className="text-xs sm:text-sm text-gray-500 mt-1">Manage and track all student registrations</p>
+              <h1 className="text-2xl font-bold text-gray-900">Students Management</h1>
+              <p className="text-sm text-gray-500 mt-1">Manage and track all student registrations</p>
             </div>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleAddStudent}
-              className="flex items-center bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-3 py-2 rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 shadow-md hover:shadow-lg text-sm sm:text-base"
+              className="flex items-center bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 shadow-md hover:shadow-lg"
             >
-              <Plus className="mr-1 h-4 w-4 sm:mr-2 sm:h-4 sm:w-4" />
-              <span className="hidden xs:inline">Add Student</span>
+              <Plus className="mr-2 h-4 w-4" />
+              Add Student
             </motion.button>
           </div>
         </header>
 
-        <main className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 relative z-0">
+        <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 relative z-0">
           {/* Stats Cards - Show skeleton or empty state */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 transition-all duration-300 hover:shadow-md">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 transition-all duration-300 hover:shadow-md">
               <div className="flex items-center">
-                <div className="p-2 sm:p-3 rounded-lg bg-blue-100 text-blue-600">
-                  <Users className="h-5 w-5 sm:h-6 sm:w-6" />
+                <div className="p-3 rounded-lg bg-blue-100 text-blue-600">
+                  <Users className="h-6 w-6" />
                 </div>
-                <div className="ml-3 sm:ml-4">
-                  <p className="text-xs sm:text-sm font-medium text-gray-600">Total Students</p>
-                  <p className="text-lg sm:text-2xl font-bold text-gray-900">-</p>
+                <div className="ml-4">
+                  <p className="text-sm font-medium text-gray-600">Total Students</p>
+                  <p className="text-2xl font-bold text-gray-900">-</p>
                 </div>
               </div>
             </div>
             
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 transition-all duration-300 hover:shadow-md">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 transition-all duration-300 hover:shadow-md">
               <div className="flex items-center">
-                <div className="p-2 sm:p-3 rounded-lg bg-green-100 text-green-600">
-                  <MapPin className="h-5 w-5 sm:h-6 sm:w-6" />
+                <div className="p-3 rounded-lg bg-green-100 text-green-600">
+                  <MapPin className="h-6 w-6" />
                 </div>
-                <div className="ml-3 sm:ml-4">
-                  <p className="text-xs sm:text-sm font-medium text-gray-600">Districts</p>
-                  <p className="text-lg sm:text-2xl font-bold text-gray-900">-</p>
+                <div className="ml-4">
+                  <p className="text-sm font-medium text-gray-600">Districts</p>
+                  <p className="text-2xl font-bold text-gray-900">-</p>
                 </div>
               </div>
             </div>
             
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 transition-all duration-300 hover:shadow-md">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 transition-all duration-300 hover:shadow-md">
               <div className="flex items-center">
-                <div className="p-2 sm:p-3 rounded-lg bg-purple-100 text-purple-600">
-                  <Calendar className="h-5 w-5 sm:h-6 sm:w-6" />
+                <div className="p-3 rounded-lg bg-purple-100 text-purple-600">
+                  <Calendar className="h-6 w-6" />
                 </div>
-                <div className="ml-3 sm:ml-4">
-                  <p className="text-xs sm:text-sm font-medium text-gray-600">This Month</p>
-                  <p className="text-lg sm:text-2xl font-bold text-gray-900">-</p>
+                <div className="ml-4">
+                  <p className="text-sm font-medium text-gray-600">This Month</p>
+                  <p className="text-2xl font-bold text-gray-900">-</p>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Search and Filters */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 mb-6 sm:mb-8 transition-all duration-300 hover:shadow-md">
-            <div className="flex flex-col md:flex-row gap-3 sm:gap-4">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8 transition-all duration-300 hover:shadow-md">
+            <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1">
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
+                    <Search className="h-5 w-5 text-gray-400" />
                   </div>
                   <input
                     type="text"
-                    className="pl-9 sm:pl-10 w-full rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none shadow-sm py-2 sm:py-3 px-3 sm:px-4 transition-all duration-300 text-sm sm:text-base"
+                    className="pl-10 w-full rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none shadow-sm py-3 px-4 transition-all duration-300"
                     placeholder="Search students by name, phone, or address..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -273,7 +273,7 @@ const Students = () => {
               </div>
               <div>
                 <select
-                  className="rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none shadow-sm py-2 sm:py-3 px-3 sm:px-4 transition-all duration-300 bg-white text-sm sm:text-base"
+                  className="rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none shadow-sm py-3 px-4 transition-all duration-300 bg-white"
                   value={selectedDistrict}
                   onChange={(e) => setSelectedDistrict(e.target.value)}
                 >
@@ -290,15 +290,15 @@ const Students = () => {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex space-x-2 sm:space-x-3 mb-4 sm:mb-6">
+          <div className="flex space-x-3 mb-6">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handlePrint}
-              className="flex items-center bg-white border border-gray-300 text-gray-700 px-3 py-2 rounded-lg hover:bg-gray-50 transition-all duration-300 shadow-sm hover:shadow-md text-sm sm:text-base"
+              className="flex items-center bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-all duration-300 shadow-sm hover:shadow-md"
             >
-              <Printer className="h-4 w-4 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-              <span className="hidden xs:inline">Print List</span>
+              <Printer className="h-4 w-4 mr-2" />
+              Print List
             </motion.button>
           </div>
 
@@ -308,25 +308,25 @@ const Students = () => {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th scope="col" className="table-header px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="table-header px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Student
                     </th>
-                    <th scope="col" className="table-header px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="table-header px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Age
                     </th>
-                    <th scope="col" className="table-header px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="table-header px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Phone
                     </th>
-                    <th scope="col" className="table-header px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
+                    <th scope="col" className="table-header px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Address
                     </th>
-                    <th scope="col" className="table-header px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="table-header px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       District
                     </th>
-                    <th scope="col" className="table-header px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
+                    <th scope="col" className="table-header px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Kaam
                     </th>
-                    <th scope="col" className="table-header px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="table-header px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Actions
                     </th>
                   </tr>
@@ -334,10 +334,10 @@ const Students = () => {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {/* Show empty state while loading */}
                   <tr>
-                    <td colSpan={7} className="table-cell text-center py-8 sm:py-12 text-gray-500">
+                    <td colSpan={7} className="table-cell text-center py-12 text-gray-500">
                       <div className="flex flex-col items-center justify-center">
-                        <Users className="h-8 w-8 sm:h-12 sm:w-12 text-gray-300 mb-3 sm:mb-4" />
-                        <p className="text-base sm:text-lg font-medium text-gray-500">Loading students...</p>
+                        <Users className="h-12 w-12 text-gray-300 mb-4" />
+                        <p className="text-lg font-medium text-gray-500">Loading students...</p>
                       </div>
                     </td>
                   </tr>
@@ -362,9 +362,9 @@ const Students = () => {
   if (isError) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
-        <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-xl max-w-md w-full border border-gray-200">
-          <h2 className="text-xl sm:text-2xl font-bold text-red-600 mb-3 sm:mb-4">Error Loading Students</h2>
-          <p className="text-gray-700 mb-5 sm:mb-6">
+        <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full border border-gray-200">
+          <h2 className="text-2xl font-bold text-red-600 mb-4">Error Loading Students</h2>
+          <p className="text-gray-700 mb-6">
             There was an error loading the students list. Please try again later.
           </p>
           <button
@@ -385,58 +385,58 @@ const Students = () => {
       
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-lg shadow-sm border-b border-gray-200 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 py-4 sm:py-6 sm:px-6 lg:px-8 flex justify-between items-center">
+        <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex justify-between items-center">
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Students Management</h1>
-            <p className="text-xs sm:text-sm text-gray-500 mt-1">Manage and track all student registrations</p>
+            <h1 className="text-2xl font-bold text-gray-900">Students Management</h1>
+            <p className="text-sm text-gray-500 mt-1">Manage and track all student registrations</p>
           </div>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={handleAddStudent}
-            className="flex items-center bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-3 py-2 rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 shadow-md hover:shadow-lg text-sm sm:text-base"
+            className="flex items-center bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 shadow-md hover:shadow-lg"
           >
-            <Plus className="mr-1 h-4 w-4 sm:mr-2 sm:h-4 sm:w-4" />
-            <span className="hidden xs:inline">Add Student</span>
+            <Plus className="mr-2 h-4 w-4" />
+            Add Student
           </motion.button>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 relative z-0">
+      <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 relative z-0">
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 transition-all duration-300 hover:shadow-md">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 transition-all duration-300 hover:shadow-md">
             <div className="flex items-center">
-              <div className="p-2 sm:p-3 rounded-lg bg-blue-100 text-blue-600">
-                <Users className="h-5 w-5 sm:h-6 sm:w-6" />
+              <div className="p-3 rounded-lg bg-blue-100 text-blue-600">
+                <Users className="h-6 w-6" />
               </div>
-              <div className="ml-3 sm:ml-4">
-                <p className="text-xs sm:text-sm font-medium text-gray-600">Total Students</p>
-                <p className="text-lg sm:text-2xl font-bold text-gray-900">{students.length}</p>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Total Students</p>
+                <p className="text-2xl font-bold text-gray-900">{students.length}</p>
               </div>
             </div>
           </div>
           
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 transition-all duration-300 hover:shadow-md">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 transition-all duration-300 hover:shadow-md">
             <div className="flex items-center">
-              <div className="p-2 sm:p-3 rounded-lg bg-green-100 text-green-600">
-                <MapPin className="h-5 w-5 sm:h-6 sm:w-6" />
+              <div className="p-3 rounded-lg bg-green-100 text-green-600">
+                <MapPin className="h-6 w-6" />
               </div>
-              <div className="ml-3 sm:ml-4">
-                <p className="text-xs sm:text-sm font-medium text-gray-600">Districts</p>
-                <p className="text-lg sm:text-2xl font-bold text-gray-900">6</p>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Districts</p>
+                <p className="text-2xl font-bold text-gray-900">6</p>
               </div>
             </div>
           </div>
           
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 transition-all duration-300 hover:shadow-md">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 transition-all duration-300 hover:shadow-md">
             <div className="flex items-center">
-              <div className="p-2 sm:p-3 rounded-lg bg-purple-100 text-purple-600">
-                <Calendar className="h-5 w-5 sm:h-6 sm:w-6" />
+              <div className="p-3 rounded-lg bg-purple-100 text-purple-600">
+                <Calendar className="h-6 w-6" />
               </div>
-              <div className="ml-3 sm:ml-4">
-                <p className="text-xs sm:text-sm font-medium text-gray-600">This Month</p>
-                <p className="text-lg sm:text-2xl font-bold text-gray-900">
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">This Month</p>
+                <p className="text-2xl font-bold text-gray-900">
                   {students.filter(s => new Date(s.createdAt) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)).length}
                 </p>
               </div>
@@ -445,16 +445,16 @@ const Students = () => {
         </div>
 
         {/* Search and Filters */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 mb-6 sm:mb-8 transition-all duration-300 hover:shadow-md">
-          <div className="flex flex-col md:flex-row gap-3 sm:gap-4">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8 transition-all duration-300 hover:shadow-md">
+          <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
+                  <Search className="h-5 w-5 text-gray-400" />
                 </div>
                 <input
                   type="text"
-                  className="pl-9 sm:pl-10 w-full rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none shadow-sm py-2 sm:py-3 px-3 sm:px-4 transition-all duration-300 text-sm sm:text-base"
+                  className="pl-10 w-full rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none shadow-sm py-3 px-4 transition-all duration-300"
                   placeholder="Search students by name, phone, or address..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
@@ -463,7 +463,7 @@ const Students = () => {
             </div>
             <div>
               <select
-                className="rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none shadow-sm py-2 sm:py-3 px-3 sm:px-4 transition-all duration-300 bg-white text-sm sm:text-base"
+                className="rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none shadow-sm py-3 px-4 transition-all duration-300 bg-white"
                 value={selectedDistrict}
                 onChange={(e) => setSelectedDistrict(e.target.value)}
               >
@@ -480,15 +480,15 @@ const Students = () => {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex space-x-2 sm:space-x-3 mb-4 sm:mb-6">
+        <div className="flex space-x-3 mb-6">
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={handlePrint}
-            className="flex items-center bg-white border border-gray-300 text-gray-700 px-3 py-2 rounded-lg hover:bg-gray-50 transition-all duration-300 shadow-sm hover:shadow-md text-sm sm:text-base"
+            className="flex items-center bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-all duration-300 shadow-sm hover:shadow-md"
           >
-            <Printer className="h-4 w-4 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-            <span className="hidden xs:inline">Print List</span>
+            <Printer className="h-4 w-4 mr-2" />
+            Print List
           </motion.button>
         </div>
 
@@ -498,25 +498,25 @@ const Students = () => {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th scope="col" className="table-header px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th scope="col" className="table-header px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Student
                   </th>
-                  <th scope="col" className="table-header px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th scope="col" className="table-header px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Age
                   </th>
-                  <th scope="col" className="table-header px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th scope="col" className="table-header px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Phone
                   </th>
-                  <th scope="col" className="table-header px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
+                  <th scope="col" className="table-header px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Address
                   </th>
-                  <th scope="col" className="table-header px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th scope="col" className="table-header px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     District
                   </th>
-                  <th scope="col" className="table-header px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
+                  <th scope="col" className="table-header px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Kaam
                   </th>
-                  <th scope="col" className="table-header px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th scope="col" className="table-header px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
@@ -524,11 +524,11 @@ const Students = () => {
               <tbody className="bg-white divide-y divide-gray-200">
                 {filteredStudents.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="table-cell text-center py-8 sm:py-12 text-gray-500">
+                    <td colSpan={7} className="table-cell text-center py-12 text-gray-500">
                       <div className="flex flex-col items-center justify-center">
-                        <Users className="h-8 w-8 sm:h-12 sm:w-12 text-gray-300 mb-3 sm:mb-4" />
-                        <p className="text-base sm:text-lg font-medium text-gray-500">No students found</p>
-                        <p className="text-xs sm:text-sm text-gray-400 mt-1">
+                        <Users className="h-12 w-12 text-gray-300 mb-4" />
+                        <p className="text-lg font-medium text-gray-500">No students found</p>
+                        <p className="text-sm text-gray-400 mt-1">
                           {debouncedSearchTerm ? 'Try adjusting your search criteria' : 'Get started by adding a new student'}
                         </p>
                       </div>
@@ -543,44 +543,44 @@ const Students = () => {
                       animate={{ opacity: 1 }}
                       transition={{ duration: 0.3 }}
                     >
-                      <td className="table-cell px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                      <td className="table-cell px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
-                          <div className="flex-shrink-0 h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center">
-                            <span className="text-white font-medium text-xs sm:text-sm">
+                          <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center">
+                            <span className="text-white font-medium">
                               {student.name.charAt(0)}
                             </span>
                           </div>
-                          <div className="ml-3 sm:ml-4">
+                          <div className="ml-4">
                             <div className="text-sm font-medium text-gray-900">{student.name}</div>
-                            <div className="text-xs text-gray-500 hidden md:block">Registered {new Date(student.createdAt).toLocaleDateString()}</div>
+                            <div className="text-sm text-gray-500">Registered {new Date(student.createdAt).toLocaleDateString()}</div>
                           </div>
                         </div>
                       </td>
-                      <td className="table-cell px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                      <td className="table-cell px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <div className="text-sm text-gray-900">{student.age} years</div>
                         </div>
                       </td>
-                      <td className="table-cell px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                      <td className="table-cell px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
-                          <Phone className="h-4 w-4 text-gray-400 mr-1 sm:mr-2" />
+                          <Phone className="h-4 w-4 text-gray-400 mr-2" />
                           <div className="text-sm text-gray-900">{student.phone}</div>
                         </div>
                       </td>
-                      <td className="table-cell px-4 sm:px-6 py-3 sm:py-4 hidden md:table-cell">
+                      <td className="table-cell px-6 py-4">
                         <div className="text-sm text-gray-900 max-w-xs truncate">{student.address}</div>
                       </td>
-                      <td className="table-cell px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                        <span className="inline-flex items-center px-2 py-1 sm:px-3 sm:py-1 rounded-full text-xs font-medium bg-gradient-to-r from-green-100 to-emerald-100 text-green-800">
-                          <MapPin className="h-3 w-3 mr-1 hidden sm:inline" />
+                      <td className="table-cell px-6 py-4 whitespace-nowrap">
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-green-100 to-emerald-100 text-green-800">
+                          <MapPin className="h-3 w-3 mr-1" />
                           {student.district}
                         </span>
                       </td>
-                      <td className="table-cell px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap hidden md:table-cell">
+                      <td className="table-cell px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">{student.coursePlace}</div>
                       </td>
-                      <td className="table-cell px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                        <div className="flex items-center space-x-2">
+                      <td className="table-cell px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center space-x-3">
                           <motion.button
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
