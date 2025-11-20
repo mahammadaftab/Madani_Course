@@ -81,10 +81,18 @@ const Students = () => {
   };
 
   const handlePrint = () => {
-    // Create a new window for printing
-    const printWindow = window.open('', '_blank');
-    
-    if (printWindow) {
+    try {
+      // For mobile compatibility, we'll use a different approach
+      // Create a hidden iframe for printing
+      const iframe = document.createElement('iframe');
+      iframe.style.position = 'absolute';
+      iframe.style.width = '0px';
+      iframe.style.height = '0px';
+      iframe.style.border = 'none';
+      iframe.style.visibility = 'hidden';
+      
+      document.body.appendChild(iframe);
+      
       // Get the current date for the print header
       const printDate = new Date().toLocaleDateString();
       
@@ -97,11 +105,13 @@ const Students = () => {
         <html>
         <head>
           <title>Students List</title>
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <style>
             body {
-              font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
               margin: 20px;
               color: #000;
+              font-size: 14px;
             }
             .print-header {
               text-align: center;
@@ -111,30 +121,53 @@ const Students = () => {
             }
             .print-header h1 {
               margin: 0;
+              font-size: 20px;
+            }
+            .print-header p {
+              margin: 5px 0 0 0;
+              font-size: 12px;
             }
             table {
               width: 100%;
               border-collapse: collapse;
               margin-top: 20px;
+              font-size: 12px;
             }
             th, td {
               border: 1px solid #333;
-              padding: 8px;
+              padding: 6px;
               text-align: left;
             }
             th {
               background-color: #f0f0f0;
               font-weight: bold;
             }
+            .student-name {
+              font-weight: bold;
+            }
             @media print {
               body {
-                margin: 0;
-                padding: 20px;
+                margin: 10px;
+                padding: 10px;
+              }
+              table {
+                font-size: 10px;
+              }
+              th, td {
+                padding: 4px;
+              }
+            }
+            @media screen and (max-width: 768px) {
+              body {
+                font-size: 12px;
+              }
+              table {
+                font-size: 10px;
               }
             }
           </style>
         </head>
-        <body>
+        <body onload="window.print()">
           <div class="print-header">
             <h1>${heading}</h1>
             <p>Printed on: ${printDate}</p>
@@ -165,19 +198,36 @@ const Students = () => {
               `).join('')}
             </tbody>
           </table>
+          <script>
+            // Add a small delay before printing to ensure content is loaded
+            setTimeout(function() {
+              window.print();
+              // Close the window after printing
+              setTimeout(function() {
+                window.close();
+              }, 1000);
+            }, 500);
+          </script>
         </body>
         </html>
       `;
       
-      // Write the content to the print window
-      printWindow.document.write(printContent);
-      printWindow.document.close();
+      // Write content to iframe
+      const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+      if (iframeDoc) {
+        iframeDoc.open();
+        iframeDoc.write(printContent);
+        iframeDoc.close();
+      }
       
-      // Wait a bit for content to load, then print
+      // Remove iframe after printing
       setTimeout(() => {
-        printWindow.print();
-        printWindow.close();
-      }, 250);
+        document.body.removeChild(iframe);
+      }, 5000);
+    } catch (error) {
+      console.error('Print error:', error);
+      // Fallback to simple print
+      window.print();
     }
   };
 

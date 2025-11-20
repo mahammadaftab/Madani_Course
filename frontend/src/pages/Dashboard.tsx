@@ -119,20 +119,27 @@ const Dashboard = () => {
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zMCAyOGMwLTEuMS45LTIgMi0yaDE2YzEuMSAwIDItLjkgMi0yVjEyYzAtMS4xLS45LTItMi0yaC0xNmMtMS4xIDAtMiAuOS0yIDJ2MTR6IiBzdHJva2U9IiNlNWU1ZTUiIHN0cm9rZS13aWR0aD0iMSIvPjxwYXRoIGQ9Ik0zMCAzMGMwLTEuMS45LTIgMi0yaDE2YzEuMSAwIDItLjkgMi0yVjE0YzAtMS4xLS45LTItMi0yaC0xNmMtMS4xIDAtMiAuOS0yIDJ2MTZ6IiBzdHJva2U9IiNlNWU1ZTUiIHN0cm9rZS13aWR0aD0iMSIvPjxwYXRoIGQ9Ik0zMCAzMmMwLTEuMS45LTIgMi0yaDE2YzEuMSAwIDItLjkgMi0yVjE2YzAtMS4xLS45LTItMi0yaC0xNmMtMS4xIDAtMiAuOS0yIDJ2MTZ6IiBzdHJva2U9IiNlNWU1ZTUiIHN0cm9rZS13aWR0aD0iMSIvPjwvZz48L3N2Zz4=')] opacity-20"></div>
       
-      {/* Header */}
+      {/* Header 1 - Centered Image */}
       <header className="bg-white/80 backdrop-blur-lg shadow-sm border-b border-gray-200 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex justify-between items-center">
+        <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex justify-center">
+          <img 
+            src="/green-logo.png" 
+            alt="Logo" 
+            className="h-12 w-auto"
+          />
+        </div>
+      </header>
+      
+      {/* Header 2 - Left side content and right side admin button */}
+      <header className="bg-white/80 backdrop-blur-lg shadow-sm border-b border-gray-200 sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex justify-between items-center">
+          {/* Left side - div with h1 and p */}
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Madani Course</h1>
-            <p className="text-sm text-gray-500 mt-1">Welcome to your admin panel</p>
+            <h1 className="text-2xl font-bold text-gray-900">Madani Course Department</h1>
+            <p className="text-sm text-gray-500 mt-1">Mohammed Yaseer Attari</p>
           </div>
-          <div className="absolute left-1/2 transform -translate-x-1/2">
-            <img 
-              src="/green-logo.png" 
-              alt="Logo" 
-              className="h-10 w-auto"
-            />
-          </div>
+          
+          {/* Right side - Admin button */}
           <div className="relative" ref={profileRef}>
             <button
               onClick={() => setShowProfileDropdown(!showProfileDropdown)}
