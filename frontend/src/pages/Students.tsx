@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { Search, Printer, Plus, Edit, Trash2, Users, MapPin, Phone, Calendar } from 'lucide-react';
+import { Search, Printer, Plus, Edit, Trash2, Users, MapPin, Phone, Home, Calendar } from 'lucide-react';
 import { studentService } from '../services/studentService';
 import StudentForm from '../components/StudentForm';
 import type { Student } from '../types';
@@ -39,8 +39,8 @@ const Students = () => {
     },
     // Don't refetch on window focus to reduce API calls
     refetchOnWindowFocus: false,
-    // Only enable query when debounced term is set or we're fetching all students
-    enabled: debouncedSearchTerm.length > 0 || (debouncedSearchTerm.length === 0 && selectedDistrict === 'All')
+    // Enable query for all cases - when searching or filtering by district
+    enabled: true
   });
 
   const students: Student[] = data?.data || [];
