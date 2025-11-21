@@ -14,6 +14,11 @@ export interface AuthResponse {
   };
 }
 
+export interface LoginError {
+  message: string;
+  errorType?: 'email' | 'password';
+}
+
 export interface User {
   id: string;
   email: string;
@@ -31,9 +36,16 @@ export const authService = {
       const response = await apiClient.post<AuthResponse>('/auth/login', credentials);
       console.log('[AUTH] Login response:', response);
       return response;
-    } catch (error) {
+    } catch (error: any) {
       console.error('[AUTH] Login error:', error);
-      throw error;
+      
+      // Extract error details from the response
+      if (error.response && error.response.data) {
+        const errorData: LoginError = error.response.data;
+        throw new Error(errorData.message || 'Login failed');
+      }
+      
+      throw new Error('An error occurred during login');
     }
   },
 

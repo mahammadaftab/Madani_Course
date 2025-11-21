@@ -66,9 +66,9 @@ export const useAuth = () => {
         console.log('[AUTH HOOK] Login failed: Invalid credentials');
         return { success: false, error: 'Invalid credentials' };
       }
-    } catch (error) {
-      console.log('[AUTH HOOK] Login error:', error);
-      return { success: false, error: 'An error occurred during login' };
+    } catch (error: any) {
+      console.log('[AUTH HOOK] Login error:', error.message);
+      return { success: false, error: error.message };
     }
   };
 

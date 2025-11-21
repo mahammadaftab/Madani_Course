@@ -9,6 +9,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [errorType, setErrorType] = useState<'email' | 'password' | 'both' | null>(null);
   const [loading, setLoading] = useState(false);
   const [emailFocused, setEmailFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
@@ -27,13 +28,27 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setErrorType(null);
     
     const result = await login(email, password);
     
     if (result.success) {
       navigate('/');
     } else {
-      setError(result.error || 'Login failed');
+      // Handle specific error types
+      if (result.error === 'Email not found') {
+        setError('Email not found');
+        setErrorType('email');
+      } else if (result.error === 'Incorrect password') {
+        setError('Incorrect password');
+        setErrorType('password');
+      } else if (result.error === 'Invalid credentials') {
+        setError('Email and password are incorrect');
+        setErrorType('both');
+      } else {
+        setError(result.error || 'Login failed');
+        setErrorType(null);
+      }
     }
     
     setLoading(false);
@@ -81,10 +96,18 @@ const Login = () => {
             <motion.div 
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-center"
+              className={`border rounded-lg mb-6 flex items-center ${
+                errorType === 'email' 
+                  ? 'bg-red-50 border-red-200 text-red-700' 
+                  : errorType === 'password' 
+                  ? 'bg-orange-50 border-orange-200 text-orange-700' 
+                  : errorType === 'both' 
+                  ? 'bg-red-50 border-red-200 text-red-700' 
+                  : 'bg-red-50 border-red-200 text-red-700'
+              }`}
               role="alert"
             >
-              <span className="block sm:inline">{error}</span>
+              <span className="block sm:inline px-4 py-3">{error}</span>
             </motion.div>
           )}
           
@@ -115,7 +138,9 @@ const Login = () => {
                     onFocus={() => setEmailFocused(true)}
                     onBlur={() => setEmailFocused(false)}
                     className={`block w-full pl-10 py-3 border ${
-                      emailFocused 
+                      errorType === 'email' || errorType === 'both'
+                        ? 'border-red-500 ring-2 ring-red-200' 
+                        : emailFocused 
                         ? 'border-indigo-500 ring-2 ring-indigo-200' 
                         : 'border-gray-300'
                     } rounded-lg shadow-sm focus:outline-none transition-all duration-200 sm:text-sm text-gray-900`}
@@ -149,7 +174,9 @@ const Login = () => {
                     onFocus={() => setPasswordFocused(true)}
                     onBlur={() => setPasswordFocused(false)}
                     className={`block w-full pl-10 pr-10 py-3 border ${
-                      passwordFocused 
+                      errorType === 'password' || errorType === 'both'
+                        ? 'border-orange-500 ring-2 ring-orange-200' 
+                        : passwordFocused 
                         ? 'border-indigo-500 ring-2 ring-indigo-200' 
                         : 'border-gray-300'
                     } rounded-lg shadow-sm focus:outline-none transition-all duration-200 sm:text-sm text-gray-900`}

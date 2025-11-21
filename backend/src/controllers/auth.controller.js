@@ -15,14 +15,14 @@ const login = async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) {
       logger.warn(`Failed login attempt for non-existent user: ${email}`);
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(401).json({ message: 'Email not found', errorType: 'email' });
     }
 
     // Check if password matches
     const isMatch = await comparePassword(password, user.password);
     if (!isMatch) {
       logger.warn(`Failed login attempt for user: ${email}`);
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(401).json({ message: 'Incorrect password', errorType: 'password' });
     }
 
     // Generate token

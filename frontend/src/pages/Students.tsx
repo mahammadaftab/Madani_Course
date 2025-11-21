@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { Search, Printer, Plus, Edit, Trash2, Users, MapPin, Phone, Home, Calendar } from 'lucide-react';
+import { Search, Printer, Plus, Edit, Trash2, Users, MapPin, Phone, Calendar } from 'lucide-react';
 import { studentService } from '../services/studentService';
 import StudentForm from '../components/StudentForm';
 import type { Student } from '../types';
