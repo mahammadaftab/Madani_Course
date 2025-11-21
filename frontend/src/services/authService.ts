@@ -42,10 +42,11 @@ export const authService = {
       // Extract error details from the response
       if (error.response && error.response.data) {
         const errorData: LoginError = error.response.data;
-        throw new Error(errorData.message || 'Login failed');
+        throw new Error(errorData.message || 'Invalid credentials');
       }
       
-      throw new Error('An error occurred during login');
+      // If we get here, it's likely a network error or other unexpected issue
+      throw new Error('Unable to connect to the server. Please check your connection and try again.');
     }
   },
 

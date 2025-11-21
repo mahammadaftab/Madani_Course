@@ -35,18 +35,25 @@ const Login = () => {
     if (result.success) {
       navigate('/');
     } else {
-      // Handle specific error types
+      // Handle specific error types with the exact messages requested
       if (result.error === 'Email not found') {
-        setError('Email not found');
+        setError('This email was not correct please add valid email id');
         setErrorType('email');
       } else if (result.error === 'Incorrect password') {
-        setError('Incorrect password');
+        setError('password was wrong');
         setErrorType('password');
-      } else if (result.error === 'Invalid credentials') {
-        setError('Email and password are incorrect');
+      } else if (result.error === 'Email and password are incorrect') {
+        setError('Email and password wrong');
         setErrorType('both');
+      } else if (result.error === 'Invalid credentials') {
+        setError('Email and password wrong');
+        setErrorType('both');
+      } else if (result.error && result.error.includes('Unable to connect')) {
+        setError('Unable to connect to the server. Please check your connection and try again.');
+        setErrorType(null);
       } else {
-        setError(result.error || 'Login failed');
+        // For any other unexpected errors, show a more specific message
+        setError('Login failed. Please check your credentials and try again.');
         setErrorType(null);
       }
     }
