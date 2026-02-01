@@ -165,15 +165,7 @@ const AllRecords = () => {
     yPos += 8;
     doc.text(`Failed: ${data.examInfo.statistics.failed}`, 20, yPos);
     yPos += 8;
-    doc.text(`Grade Distribution:`, 20, yPos);
-    yPos += 8;
-    
-    // Grade distribution
-    for (const [grade, count] of Object.entries(data.examInfo.statistics.gradeDistribution)) {
-      doc.text(`${grade}: ${count}`, 30, yPos);
-      yPos += 6;
-    }
-    
+    // Skip grade distribution as requested
     yPos += 10;
     
     // Skip questions section as requested
@@ -260,9 +252,10 @@ const AllRecords = () => {
             table { width: 100%; border-collapse: collapse; margin-top: 20px; }
             th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
             th { background-color: #f5f5f5; }
-            .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 20px 0; }
+            .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin: 20px 0; }
             .stat-card { background: #f8f9fa; padding: 15px; border-radius: 5px; text-align: center; }
-            .grade-dist { margin-top: 20px; }
+            /* Hide grade distribution section */
+            .grade-dist { display: none; }
           </style>
         </head>
         <body>
@@ -288,26 +281,30 @@ const AllRecords = () => {
             </div>
           </div>
           
-          <div class="stats">
-            <div class="stat-card">
-              <h3>A (${record.statistics.gradeDistribution['A'] || 0})</h3>
-              <p>Excellent</p>
-            </div>
-            <div class="stat-card">
-              <h3>B (${record.statistics.gradeDistribution['B'] || 0})</h3>
-              <p>Good</p>
-            </div>
-            <div class="stat-card">
-              <h3>C (${record.statistics.gradeDistribution['C'] || 0})</h3>
-              <p>Average</p>
-            </div>
-            <div class="stat-card">
-              <h3>D (${record.statistics.gradeDistribution['D'] || 0})</h3>
-              <p>Pass</p>
-            </div>
-            <div class="stat-card">
-              <h3>F (${record.statistics.gradeDistribution['F'] || 0})</h3>
-              <p>Fail</p>
+          <!-- Grade Distribution section hidden for print -->
+          <div class="grade-dist">
+            <h3>Grade Distribution</h3>
+            <div class="stats">
+              <div class="stat-card">
+                <h3>A (${record.statistics.gradeDistribution['A'] || 0})</h3>
+                <p>Excellent</p>
+              </div>
+              <div class="stat-card">
+                <h3>B (${record.statistics.gradeDistribution['B'] || 0})</h3>
+                <p>Good</p>
+              </div>
+              <div class="stat-card">
+                <h3>C (${record.statistics.gradeDistribution['C'] || 0})</h3>
+                <p>Average</p>
+              </div>
+              <div class="stat-card">
+                <h3>D (${record.statistics.gradeDistribution['D'] || 0})</h3>
+                <p>Pass</p>
+              </div>
+              <div class="stat-card">
+                <h3>F (${record.statistics.gradeDistribution['F'] || 0})</h3>
+                <p>Fail</p>
+              </div>
             </div>
           </div>
           
