@@ -8,6 +8,7 @@ class ApiClient {
     // Remove trailing slash if present to avoid double slashes
     this.baseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
     this.token = localStorage.getItem('token');
+    console.log('[API] ApiClient initialized with baseUrl:', this.baseUrl);
   }
 
   setToken(token: string) {
@@ -26,7 +27,11 @@ class ApiClient {
     // Construct URL without double slashes
     const url = `${this.baseUrl}${normalizedEndpoint}`;
     
-    console.log(`[API] Making request to: ${url}`, { method: options.method || 'GET' });
+    console.log(`[API] Making request to: ${url}`, { 
+      method: options.method || 'GET',
+      baseUrl: this.baseUrl,
+      endpoint: normalizedEndpoint
+    });
     
     const config: RequestInit = {
       ...options,

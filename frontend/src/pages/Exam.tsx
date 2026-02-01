@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, RotateCcw, Printer, Award, BookOpen, FileText, Edit, Trash2 } from 'lucide-react';
+import { Plus, RotateCcw, Printer, Award, BookOpen, FileText, Edit, Trash2, Save, Database } from 'lucide-react';
 import type { ExamEntry, ExamQuestion } from '../types';
 import { examQuestionService, examEntryService } from '../services/examQuestionService';
+import { examRecordService } from '../services/examRecordService';
 
 const Exam = () => {
   const [activeTab, setActiveTab] = useState<'questions' | 'exam'>('questions');
@@ -26,6 +27,11 @@ const Exam = () => {
   // Loading and notification state
   const [loading, setLoading] = useState(false);
   const [notification, setNotification] = useState<{message: string, type: 'success' | 'error' | 'info'} | null>(null);
+  
+  // Save exam state
+  const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
+  const [examTitle, setExamTitle] = useState('');
+  const [examDescription, setExamDescription] = useState('');
 
   // Show notification
   const showNotification = (message: string, type: 'success' | 'error' | 'info' = 'info') => {
@@ -34,6 +40,33 @@ const Exam = () => {
     setTimeout(() => {
       setNotification(null);
     }, 3000);
+  };
+
+  // Save current exam as permanent record
+  const saveExamRecord = async () => {
+    if (!examTitle.trim()) {
+      showNotification("Please enter a title for this exam record.", "error");
+      return;
+    }
+
+    setLoading(true);
+    
+    try {
+      const result = await examRecordService.saveExamRecord({
+        title: examTitle.trim(),
+        description: examDescription.trim() || undefined
+      });
+      
+      showNotification(result.message, "success");
+      setIsSaveModalOpen(false);
+      setExamTitle('');
+      setExamDescription('');
+    } catch (error: any) {
+      console.error('[Exam] Error saving exam record:', error);
+      showNotification(error.response?.data?.message || "Failed to save exam record. Please try again.", "error");
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Load data from API on component mount
@@ -354,6 +387,97 @@ const Exam = () => {
           <rect width="100%" height="100%" fill="url(#exam-pattern)" />
         </svg>
       </div>
+      
+      {/* Save Exam Modal */}
+      {isSaveModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <motion.div 
+            className="bg-white rounded-xl shadow-2xl max-w-md w-full"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-bold text-gray-900 flex items-center">
+                  <Database className="mr-2 h-5 w-5 text-green-600" />
+                  Save Exam Record
+                </h3>
+                <button
+                  onClick={() => setIsSaveModalOpen(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                  disabled={loading}
+                >
+                  ×
+                </button>
+              </div>
+              
+              <p className="text-gray-600 mb-6">
+                Save this exam as a permanent record. You can access it later in the "All Records" section.
+              </p>
+              
+              <div className="space-y-4">
+                <div>
+                  <label htmlFor="exam-title" className="block text-sm font-medium text-gray-700 mb-1">
+                    Exam Title *
+                  </label>
+                  <input
+                    type="text"
+                    id="exam-title"
+                    value={examTitle}
+                    onChange={(e) => setExamTitle(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    placeholder="Enter exam title (e.g., Monthly Test - January 2024)"
+                    disabled={loading}
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="exam-description" className="block text-sm font-medium text-gray-700 mb-1">
+                    Description (Optional)
+                  </label>
+                  <textarea
+                    id="exam-description"
+                    value={examDescription}
+                    onChange={(e) => setExamDescription(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    placeholder="Enter exam description (optional)"
+                    rows={3}
+                    disabled={loading}
+                  />
+                </div>
+              </div>
+              
+              <div className="flex justify-end space-x-3 mt-6">
+                <button
+                  onClick={() => setIsSaveModalOpen(false)}
+                  className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-medium hover:bg-gray-300 transition-colors duration-200"
+                  disabled={loading}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={saveExamRecord}
+                  disabled={!examTitle.trim() || loading}
+                  className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {loading ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="mr-2 h-4 w-4" />
+                      Save Record
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
       
       {/* Notification popup */}
       {notification && (
@@ -686,6 +810,21 @@ const Exam = () => {
                 >
                   <Plus className="mr-2 h-4 w-4" />
                   Add Entry
+                </motion.button>
+                
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setIsSaveModalOpen(true)}
+                  disabled={entries.length === 0 || loading}
+                  className={`flex items-center px-4 py-2 rounded-lg font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 shadow-md hover:shadow-lg ${
+                    entries.length === 0
+                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                      : 'bg-green-600 text-white hover:bg-green-700 focus:ring-green-500'
+                  }`}
+                >
+                  <Save className="mr-2 h-4 w-4" />
+                  Save Exam Record
                 </motion.button>
                 
                 <motion.button

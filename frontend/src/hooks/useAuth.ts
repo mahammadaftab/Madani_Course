@@ -7,6 +7,7 @@ import { getToken, setToken as saveToken, removeToken } from '../utils';
 interface User {
   id: string;
   email: string;
+  role?: string;
 }
 
 export const useAuth = () => {

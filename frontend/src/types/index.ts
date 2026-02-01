@@ -54,6 +54,7 @@ export interface ExamEntry {
 export interface User {
   id: string;
   email: string;
+  role?: string;
 }
 
 export interface Exam {

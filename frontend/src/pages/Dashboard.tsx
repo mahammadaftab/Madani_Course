@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Users, BookOpen, FileText, User, Key, LogOut } from 'lucide-react';
+import { Users, BookOpen, FileText, User, Key, LogOut, Database } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -112,6 +112,7 @@ const Dashboard = () => {
     { name: 'Add Student', href: '/students', icon: Users, color: 'bg-blue-100 text-blue-600' },
     { name: 'Manage Courses', href: '/courses', icon: BookOpen, color: 'bg-green-100 text-green-600' },
     { name: 'Exam Section', href: '/exam', icon: FileText, color: 'bg-purple-100 text-purple-600' },
+    { name: 'All Records', href: '/all-records', icon: Database, color: 'bg-amber-100 text-amber-600' },
   ];
 
   return (

@@ -10,6 +10,7 @@ const courseRoutes = require('./routes/course.routes');
 const gridfsRoutes = require('./routes/gridfs.routes');
 const exportRoutes = require('./routes/export.routes');
 const examRoutes = require('./routes/exam.routes');
+const examRecordRoutes = require('./routes/examRecord.routes');
 
 const { errorHandler } = require('./middleware/error.middleware');
 const logger = require('./utils/logger');
@@ -40,6 +41,7 @@ app.use('/api/courses', courseRoutes);
 app.use('/api/uploads', gridfsRoutes);
 app.use('/api/export', exportRoutes);
 app.use('/api/exam', examRoutes);
+app.use('/api/exam-records', examRecordRoutes);
 
 // Error handling middleware
 app.use(errorHandler);
