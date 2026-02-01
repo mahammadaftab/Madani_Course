@@ -94,10 +94,19 @@ const AllRecords = () => {
     try {
       const data = await examRecordService.exportRecord(recordId);
       
-      // Create a simplified version without questions for export
+      // Create a simplified version without questions and grades for export
       const simplifiedData = {
         examInfo: data.examInfo,
-        entries: data.entries,
+        entries: data.entries.map((entry: any) => ({
+          rank: entry.rank,
+          name: entry.name,
+          phone: entry.phone,
+          address: entry.address,
+          coursePlace: entry.coursePlace,
+          marks: entry.marks,
+          percentage: entry.percentage,
+          // Skip grade as requested
+        })),
         // Skip questions as requested
       };
       
@@ -108,7 +117,7 @@ const AllRecords = () => {
         // Generate PDF with simplified data
         generatePdfReport(simplifiedData, title);
       } else {
-        // Create and download JSON file without questions
+        // Create and download JSON file without questions and grades
         const blob = new Blob([JSON.stringify(simplifiedData, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -184,11 +193,11 @@ const AllRecords = () => {
     doc.text('Phone', 80, yPos);
     doc.text('Address', 100, yPos);
     doc.text('Course Place', 140, yPos);
-    doc.text('Percentage', 180, yPos);
+    doc.text('Percentage', 170, yPos);
     yPos += 6;
     
     // Draw separator line
-    doc.line(15, yPos - 2, 200, yPos - 2);
+    doc.line(15, yPos - 2, 190, yPos - 2);
     
     // Add results data
     for (let i = 0; i < data.entries.length; i++) {
@@ -199,7 +208,7 @@ const AllRecords = () => {
       doc.text(entry.phone?.substring(0, 10) || '-', 80, yPos);
       doc.text(entry.address.substring(0, 15), 100, yPos);
       doc.text(entry.coursePlace.substring(0, 15), 140, yPos);
-      doc.text(`${entry.percentage.toFixed(2)}%`, 180, yPos);
+      doc.text(`${entry.percentage.toFixed(2)}%`, 170, yPos);
       
       // Check if we need to add a new page
       if (yPos > 270) {
@@ -318,7 +327,7 @@ const AllRecords = () => {
                 <th>Address</th>
                 <th>Course Place</th>
                 <th>Percentage</th>
-                <th>Grade</th>
+                <!-- Grade column hidden for print -->
               </tr>
             </thead>
             <tbody>
@@ -330,7 +339,7 @@ const AllRecords = () => {
                   <td>${entry.address}</td>
                   <td>${entry.coursePlace}</td>
                   <td>${entry.percentage.toFixed(2)}%</td>
-                  <td>${getGrade(entry.percentage)}</td>
+                  <!-- Grade cell hidden for print -->
                 </tr>
               `).join('')}
             </tbody>
@@ -703,7 +712,7 @@ const AllRecords = () => {
                       coursePlace: entry.coursePlace,
                       marks: entry.marks,
                       percentage: entry.percentage,
-                      grade: getGrade(entry.percentage)
+                      // Skip grade as requested
                     }))
                   }, selectedRecord.title)}
                   className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
