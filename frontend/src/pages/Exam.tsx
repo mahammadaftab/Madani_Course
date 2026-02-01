@@ -273,6 +273,7 @@ const Exam = () => {
           <table>
             <thead>
               <tr>
+                <th>SL No.</th>
                 <th>Name</th>
                 <th>Phone No.</th>
                 <th>Address</th>
@@ -282,8 +283,9 @@ const Exam = () => {
               </tr>
             </thead>
             <tbody>
-              ${entries.map(entry => `
+              ${entries.map((entry, index) => `
                 <tr>
+                  <td>${index + 1}</td>
                   <td>${entry.name}</td>
                   <td>${entry.phone}</td>
                   <td>${entry.address}</td>
@@ -866,6 +868,7 @@ const Exam = () => {
                   <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                       <tr>
+                        <th className="table-header px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SL No.</th>
                         <th className="table-header px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                         <th className="table-header px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone No.</th>
                         <th className="table-header px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Address</th>
@@ -877,8 +880,9 @@ const Exam = () => {
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                      {entries.map((entry) => (
+                      {entries.map((entry, index) => (
                         <tr key={entry._id} className="hover:bg-gray-50">
+                          <td className="table-cell px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">{index + 1}</td>
                           <td className="table-cell px-4 py-3 whitespace-nowrap text-sm text-gray-900">{entry.name}</td>
                           <td className="table-cell px-4 py-3 whitespace-nowrap text-sm text-gray-900">{entry.phone}</td>
                           <td className="table-cell px-4 py-3 whitespace-nowrap text-sm text-gray-900">{entry.address}</td>
@@ -891,7 +895,7 @@ const Exam = () => {
                       ))}
                       {entries.length === 0 && (
                         <tr>
-                          <td colSpan={4 + questions.length + 1} className="table-cell px-4 py-3 text-center text-sm text-gray-500">
+                          <td colSpan={5 + questions.length + 1} className="table-cell px-4 py-3 text-center text-sm text-gray-500">
                             No entries yet. Add some entries to see them here.
                           </td>
                         </tr>
