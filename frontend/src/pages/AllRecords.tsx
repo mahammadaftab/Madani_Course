@@ -13,10 +13,12 @@ import {
   Database,
   TrendingUp,
   Award,
-  BookOpen
+  BookOpen,
+  FileText
 } from 'lucide-react';
 import { examRecordService, type ExamRecord, type ExamRecordStats } from '../services/examRecordService';
 import { useAuth } from '../hooks/useAuth';
+import jsPDF from 'jspdf';
 
 const AllRecords = () => {
   const { user } = useAuth();
@@ -92,22 +94,133 @@ const AllRecords = () => {
     try {
       const data = await examRecordService.exportRecord(recordId);
       
-      // Create and download JSON file
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `exam-record-${title.replace(/\s+/g, '-').toLowerCase()}.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      // Create a simplified version without questions for export
+      const simplifiedData = {
+        examInfo: data.examInfo,
+        entries: data.entries,
+        // Skip questions as requested
+      };
       
-      showNotification('Record exported successfully', 'success');
+      // Ask user whether to download as PDF or JSON
+      const exportChoice = window.confirm(`Do you want to download as PDF?\n\nClick "OK" for PDF or "Cancel" for JSON.`);
+      
+      if (exportChoice) {
+        // Generate PDF with simplified data
+        generatePdfReport(simplifiedData, title);
+      } else {
+        // Create and download JSON file without questions
+        const blob = new Blob([JSON.stringify(simplifiedData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `exam-record-${title.replace(/\s+/g, '-').toLowerCase()}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        showNotification('Record exported successfully', 'success');
+      }
     } catch (error) {
       console.error('[AllRecords] Error exporting record:', error);
       showNotification('Failed to export record', 'error');
     }
+  };
+
+  // Generate PDF report for exam record
+  const generatePdfReport = (data: any, title: string) => {
+    const doc = new jsPDF();
+    
+    // Add title
+    doc.setFontSize(20);
+    doc.text(title, 105, 20, { align: 'center' });
+    
+    // Add subtitle
+    doc.setFontSize(12);
+    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 105, 30, { align: 'center' });
+    
+    // Add basic info
+    let yPos = 40;
+    doc.setFontSize(14);
+    doc.text('Exam Information', 20, yPos);
+    yPos += 10;
+    
+    doc.setFontSize(12);
+    doc.text(`Title: ${data.examInfo.title}`, 20, yPos);
+    yPos += 8;
+    doc.text(`Description: ${data.examInfo.description || 'N/A'}`, 20, yPos);
+    yPos += 8;
+    doc.text(`Date: ${new Date(data.examInfo.examDate).toLocaleDateString()}`, 20, yPos);
+    yPos += 8;
+    doc.text(`Total Students: ${data.examInfo.totalStudents}`, 20, yPos);
+    yPos += 12;
+    
+    // Add statistics
+    doc.setFontSize(14);
+    doc.text('Statistics', 20, yPos);
+    yPos += 10;
+    
+    doc.setFontSize(12);
+    doc.text(`Passed: ${data.examInfo.statistics.passed}`, 20, yPos);
+    yPos += 8;
+    doc.text(`Failed: ${data.examInfo.statistics.failed}`, 20, yPos);
+    yPos += 8;
+    doc.text(`Grade Distribution:`, 20, yPos);
+    yPos += 8;
+    
+    // Grade distribution
+    for (const [grade, count] of Object.entries(data.examInfo.statistics.gradeDistribution)) {
+      doc.text(`${grade}: ${count}`, 30, yPos);
+      yPos += 6;
+    }
+    
+    yPos += 10;
+    
+    // Skip questions section as requested
+    
+    yPos += 10;
+    
+    // Add results section
+    doc.setFontSize(14);
+    doc.text('Results', 20, yPos);
+    yPos += 10;
+    
+    // Add results table header
+    doc.setFontSize(10);
+    doc.text('Rank', 20, yPos);
+    doc.text('Name', 40, yPos);
+    doc.text('Phone', 80, yPos);
+    doc.text('Address', 100, yPos);
+    doc.text('Course Place', 140, yPos);
+    doc.text('Percentage', 180, yPos);
+    yPos += 6;
+    
+    // Draw separator line
+    doc.line(15, yPos - 2, 200, yPos - 2);
+    
+    // Add results data
+    for (let i = 0; i < data.entries.length; i++) {
+      const entry = data.entries[i];
+      doc.setFontSize(9);
+      doc.text(`#${entry.rank}`, 20, yPos);
+      doc.text(entry.name.substring(0, 15), 40, yPos);
+      doc.text(entry.phone?.substring(0, 10) || '-', 80, yPos);
+      doc.text(entry.address.substring(0, 15), 100, yPos);
+      doc.text(entry.coursePlace.substring(0, 15), 140, yPos);
+      doc.text(`${entry.percentage.toFixed(2)}%`, 180, yPos);
+      
+      // Check if we need to add a new page
+      if (yPos > 270) {
+        doc.addPage();
+        yPos = 20;
+      } else {
+        yPos += 6;
+      }
+    }
+    
+    // Save the PDF
+    doc.save(`exam-record-${title.replace(/\s+/g, '-').toLowerCase()}.pdf`);
+    showNotification('PDF report generated successfully', 'success');
   };
 
   // Delete record (admin only)
@@ -577,8 +690,33 @@ const AllRecords = () => {
               </h2>
               <div className="flex space-x-2">
                 <button
-                  onClick={() => printRecord(selectedRecord)}
+                  onClick={() => generatePdfReport({
+                    examInfo: {
+                      title: selectedRecord.title,
+                      description: selectedRecord.description,
+                      examDate: selectedRecord.examDate,
+                      totalStudents: selectedRecord.totalStudents,
+                      statistics: selectedRecord.statistics
+                    },
+                    entries: selectedRecord.entries.map(entry => ({
+                      rank: entry.rank,
+                      name: entry.name,
+                      phone: entry.phone,
+                      address: entry.address,
+                      coursePlace: entry.coursePlace,
+                      marks: entry.marks,
+                      percentage: entry.percentage,
+                      grade: getGrade(entry.percentage)
+                    }))
+                  }, selectedRecord.title)}
                   className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
+                >
+                  <FileText className="mr-2 h-4 w-4 inline" />
+                  PDF Report
+                </button>
+                <button
+                  onClick={() => printRecord(selectedRecord)}
+                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200"
                 >
                   Print
                 </button>
@@ -647,8 +785,8 @@ const AllRecords = () => {
                 </div>
               </div>
 
-              {/* Questions List */}
-              <div className="mb-8">
+              {/* Questions List - HIDDEN per user request */}
+              {/* <div className="mb-8">
                 <h3 className="font-semibold text-gray-900 mb-4">Questions ({selectedRecord.questions.length})</h3>
                 <div className="space-y-3">
                   {selectedRecord.questions.map((question, index) => (
@@ -661,7 +799,7 @@ const AllRecords = () => {
                     </div>
                   ))}
                 </div>
-              </div>
+              </div> */}
 
               {/* Results Table */}
               <div>
