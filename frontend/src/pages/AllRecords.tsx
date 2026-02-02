@@ -779,7 +779,7 @@ const AllRecords = () => {
               {/* Grade Distribution */}
               <div className="bg-gray-50 rounded-lg p-4 mb-8">
                 <h3 className="font-semibold text-gray-900 mb-4">Grade Distribution</h3>
-                <div className="grid grid-cols-5 gap-3">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
                   {['A', 'B', 'C', 'D', 'F'].map(grade => (
                     <div key={grade} className="text-center p-3 bg-white rounded border">
                       <p className="text-2xl font-bold text-gray-900">
@@ -816,38 +816,38 @@ const AllRecords = () => {
                   <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                       <tr>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Rank</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Phone</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Address</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Course Place</th>
+                        <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-4 sm:py-3">Rank</th>
+                        <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-4 sm:py-3">Name</th>
+                        <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-4 sm:py-3">Phone</th>
+                        <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-4 sm:py-3">Address</th>
+                        <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-4 sm:py-3">Course Place</th>
                         {selectedRecord.questions.map((_, qIndex) => (
-                          <th key={qIndex} className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                          <th key={qIndex} className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-4 sm:py-3">
                             Q{qIndex + 1}
                           </th>
                         ))}
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Percentage</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Grade</th>
+                        <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-4 sm:py-3">Percentage</th>
+                        <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sm:px-4 sm:py-3">Grade</th>
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                       {selectedRecord.entries.map(entry => (
                         <tr key={entry._id} className="hover:bg-gray-50">
-                          <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">#{entry.rank}</td>
-                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">{entry.name}</td>
-                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">{entry.phone || '-'}</td>
-                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">{entry.address}</td>
-                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">{entry.coursePlace}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900 sm:px-4 sm:py-3">#{entry.rank}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-900 sm:px-4 sm:py-3">{entry.name}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-900 sm:px-4 sm:py-3">{entry.phone || '-'}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-900 sm:px-4 sm:py-3">{entry.address}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-900 sm:px-4 sm:py-3">{entry.coursePlace}</td>
                           {entry.marks.map((mark, index) => (
-                            <td key={index} className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                            <td key={index} className="px-3 py-2 whitespace-nowrap text-sm text-gray-900 sm:px-4 sm:py-3">
                               {mark}
                             </td>
                           ))}
-                          <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-blue-600">
+                          <td className="px-3 py-2 whitespace-nowrap text-sm font-medium text-blue-600 sm:px-4 sm:py-3">
                             {entry.percentage.toFixed(2)}%
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap">
-                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                          <td className="px-3 py-2 whitespace-nowrap sm:px-4 sm:py-3">
+                            <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
                               getGrade(entry.percentage) === 'A' ? 'bg-green-100 text-green-800' :
                               getGrade(entry.percentage) === 'B' ? 'bg-blue-100 text-blue-800' :
                               getGrade(entry.percentage) === 'C' ? 'bg-yellow-100 text-yellow-800' :
