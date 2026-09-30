@@ -114,6 +114,8 @@ To create an initial admin user:
 ```bash
 cd backend
 npm run seed:admin
+    or
+node -e "require('dns').setServers(['1.1.1.1', '8.8.8.8']); require('./src/scripts/seedAdmin.js')"
 ```
 
 ## Deployment
